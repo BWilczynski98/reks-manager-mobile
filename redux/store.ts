@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { animalApi } from "./services/animal";
+import { authApi } from "./services/auth";
 
 export const rootReducer = combineReducers({
+  [authApi.reducerPath]: authApi.reducer,
   [animalApi.reducerPath]: animalApi.reducer,
 });
 

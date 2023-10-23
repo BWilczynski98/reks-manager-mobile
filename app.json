@@ -3,6 +3,7 @@
     "experiments": {
       "tsconfigPaths": true
     },
+
     "name": "reks-manager-mobile",
     "slug": "reks-manager-mobile",
     "version": "1.0.0",
@@ -16,6 +17,9 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": true
     },
     "android": {
