@@ -1,10 +1,12 @@
-import { SerializedError } from "@reduxjs/toolkit";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { emptySplitApi as api } from "redux/emptyApi";
 
 type SignInType = {
   username: string;
   password: string;
+};
+
+type SendPasswordResetTokenType = {
+  email: string;
 };
 
 export interface Root {
@@ -37,6 +39,13 @@ const injectedRtkApi = api.injectEndpoints({
         method: "POST",
       }),
     }),
+    sendPasswordResetTokenToUserEmail: build.mutation({
+      query: (email: SendPasswordResetTokenType) => ({
+        url: "/auth/password/reset/",
+        method: "POST",
+        body: email,
+      }),
+    }),
     getUserData: build.query<UserResponse, void>({
       query: () => ({
         url: "/auth/user/",
@@ -52,5 +61,11 @@ const injectedRtkApi = api.injectEndpoints({
   }),
 });
 
-export const { useSignInMutation, useLogoutMutation, useGetUserDataQuery, useGetAnotherDataQuery } = injectedRtkApi;
+export const {
+  useSignInMutation,
+  useLogoutMutation,
+  useGetUserDataQuery,
+  useGetAnotherDataQuery,
+  useSendPasswordResetTokenToUserEmailMutation,
+} = injectedRtkApi;
 export { injectedRtkApi as authApi };
