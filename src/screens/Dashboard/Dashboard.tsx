@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, Text } from "react-native";
+import { Button, Text, View } from "react-native";
 import { emptySplitApi } from "redux/emptyApi";
 import { logout } from "redux/features/userSlice";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
@@ -12,8 +12,6 @@ export const Dashboard = () => {
   const { data } = useGetUserDataQuery();
   const { data: anotherData, error } = useGetAnotherDataQuery();
 
-  console.log("🚀 ~ file: Dashboard.tsx:12 ~ Dashboard ~ data:", data);
-
   const logoutFunction = async () => {
     await logoutUser(null)
       .unwrap()
@@ -23,10 +21,7 @@ export const Dashboard = () => {
       });
   };
 
-  const fetchData = () => {
-    console.log("🚀 ~ file: Dashboard.tsx:14 ~ Dashboard ~ error:", error);
-    console.log("🚀 ~ file: Dashboard.tsx:14 ~ Dashboard ~ anotherData:", anotherData);
-  };
+  const fetchData = () => {};
 
   return (
     <View>
