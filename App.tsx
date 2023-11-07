@@ -1,4 +1,5 @@
 import { AppNavigation } from "@/navigation";
+
 import { StatusBar } from "expo-status-bar";
 import { ReduxProvider } from "redux/provider";
 

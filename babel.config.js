@@ -3,7 +3,6 @@ module.exports = function (api) {
   return {
     presets: ["babel-preset-expo"],
     plugins: [
-      "nativewind/babel",
       [
         "module:react-native-dotenv",
         {
@@ -22,12 +21,14 @@ module.exports = function (api) {
         "module-resolver",
 
         {
+          extensions: [".ts", ".tsx", ".jsx", ".js", ".json"],
+          root: ["."],
           alias: {
             "@config": "./src/config",
           },
         },
-        "nativewind/babel",
       ],
+      "nativewind/babel",
     ],
   };
 };
