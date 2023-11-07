@@ -3,7 +3,7 @@ import { StackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, Text, View } from "react-native";
 import { login } from "redux/features/userSlice";
 import { useAppDispatch } from "redux/hooks";
 import { useSignInMutation } from "redux/services/auth";
@@ -57,10 +57,10 @@ export const SignIn = ({ navigation }: StackProps) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 40}
       >
-        <View className="flex-1 justify-center px-4">
+        <View className="flex-1 justify-center">
           <View className="space-y-4 py-4">
             <View className="items-center">
-              <Heading>Logowanie</Heading>
+              <Heading fontSize="3xl">Logowanie</Heading>
             </View>
             {authorizationIsError ? (
               <View>
@@ -121,14 +121,11 @@ export const SignIn = ({ navigation }: StackProps) => {
             <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
               Zaloguj
             </Button>
-            <View>
+            <Pressable onPress={() => navigation.navigate("ForgotPassword")}>
               <Text className="text-gray-50 text-center">
-                Zapomniałeś/aś hasła?{" "}
-                <Text className="font-semibold" onPress={() => navigation.navigate("ForgotPassword")}>
-                  Kliknij tutaj
-                </Text>
+                Zapomniałeś/aś hasła? <Text className="font-semibold">Kliknij tutaj</Text>
               </Text>
-            </View>
+            </Pressable>
           </View>
         </View>
       </KeyboardAvoidingView>
