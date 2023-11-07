@@ -3,13 +3,12 @@ import { StackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { login } from "redux/features/userSlice";
 import { useAppDispatch } from "redux/hooks";
 import { useSignInMutation } from "redux/services/auth";
 import * as yup from "yup";
 import { userAuthFormSchema } from "./helpers/schema";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type AuthorizationFormData = yup.InferType<typeof userAuthFormSchema>;
 
@@ -54,13 +53,20 @@ export const SignIn = ({ navigation }: StackProps) => {
   return (
     <Container>
       <KeyboardAvoidingView
-        className="flex-1"
-        behavior="padding"
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 40}
       >
         <View className="flex-1 justify-center px-4">
-          <View className="items-center">
-            <Heading>Logowanie</Heading>
+          <View className="space-y-4 py-4">
+            <View className="items-center">
+              <Heading>Logowanie</Heading>
+            </View>
+            {authorizationIsError ? (
+              <View>
+                <Text className="text-red-500 font-semibold">{authorizationError?.data.message}</Text>
+              </View>
+            ) : null}
           </View>
           {/* Forms */}
           <View className="w-full space-y-6">
@@ -103,6 +109,8 @@ export const SignIn = ({ navigation }: StackProps) => {
                     password
                     secureTextEntry={!passwordIsVisible}
                     togglePasswordVisibility={togglePasswordVisibility}
+                    error={!!errors.password}
+                    errorMessage={errors.password?.message}
                   />
                 )}
                 name="password"
@@ -110,10 +118,15 @@ export const SignIn = ({ navigation }: StackProps) => {
             </View>
           </View>
           <View className="w-full border mt-10 space-y-4">
-            <Button>Zaloguj</Button>
+            <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
+              Zaloguj
+            </Button>
             <View>
               <Text className="text-gray-50 text-center">
-                Zapomniałeś/aś hasła? <Text className="font-semibold">Kliknij tutaj</Text>
+                Zapomniałeś/aś hasła?{" "}
+                <Text className="font-semibold" onPress={() => navigation.navigate("ForgotPassword")}>
+                  Kliknij tutaj
+                </Text>
               </Text>
             </View>
           </View>
