@@ -1,12 +1,14 @@
-import { View, Text, Platform, StatusBar } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native";
+import { Button, Container, Input } from "@/components";
 import { Heading } from "@/components/UI/Heading";
-import { Controller, useForm } from "react-hook-form";
 import { errorsDictionary } from "@/helpers/errors-dictionary";
-import * as yup from "yup";
-import { Button, Input } from "@/components";
+import { StackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { KeyboardAvoidingView, Platform, Pressable, Text, View } from "react-native";
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { useSendPasswordResetTokenToUserEmailMutation } from "redux/services/auth";
+import * as yup from "yup";
 
 const userAuthFormSchema = yup.object({
   email: yup.string().email(errorsDictionary.not_valid_email_address).required(errorsDictionary.required),
@@ -14,7 +16,42 @@ const userAuthFormSchema = yup.object({
 
 type ForgotPasswordFormData = yup.InferType<typeof userAuthFormSchema>;
 
-export const ForgotPassword = () => {
+type NotificationOfSuccessType = {
+  backToLoginScreen: () => void;
+  email: string | null;
+};
+
+const NotificationOfSuccess = ({ backToLoginScreen, email }: NotificationOfSuccessType) => {
+  return (
+    <View className="flex-1 justify-center">
+      <View className="space-y-4">
+        <View>
+          <Heading fontSize="3xl">Sprawdź szkynkę email</Heading>
+        </View>
+        <View>
+          <Text className="text-gray-50 text-base">
+            Wysłaliśmy link resetujący hasło na adres email{" "}
+            <Text className="font-semibold text-violet-400">{email}</Text> Wiadomość może przyjść w ciągu paru minut.
+            Sprawdź folder spam
+          </Text>
+        </View>
+      </View>
+      <View className="space-y-4 mt-10">
+        <View>
+          <Button onPress={backToLoginScreen}>Powrót do logowania</Button>
+        </View>
+        {/* <View className="items-center">
+          <Text className="text-gray-50">Lub</Text>
+        </View>
+        <View>
+          <Button variant="outline">Wyślij ponownie</Button>
+        </View> */}
+      </View>
+    </View>
+  );
+};
+
+export const ForgotPassword = ({ navigation }: StackProps) => {
   const {
     control,
     handleSubmit,
@@ -25,48 +62,85 @@ export const ForgotPassword = () => {
       email: "",
     },
   });
+  const [userEmailPrompt, setUserEmailPrompt] = useState<string | null>(null);
+  const [sendPasswordResetTokenToUserEmail, { isError, isLoading, isSuccess, data, status }] =
+    useSendPasswordResetTokenToUserEmailMutation();
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    console.log("🚀 ~ file: ForgotPassword.tsx:30 ~ onSubmit ~ data:", data);
+    await sendPasswordResetTokenToUserEmail(data).unwrap();
+    setUserEmailPrompt(data.email);
+  };
+
+  const backToLoginScreen = () => {
+    navigation.goBack();
   };
 
   return (
-    <SafeAreaView style={{ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
-      <View>
-        <Heading fontSize="3xl">Przypominanie hasła</Heading>
+    <Container>
+      <View className="mt-4">
+        <Pressable onPress={backToLoginScreen}>
+          <Text className="text-gray-50 font-semibold">
+            <ChevronLeftIcon color="white" size={24} />
+          </Text>
+        </Pressable>
       </View>
-      <View>
-        <View>
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <View>
-                <Input
-                  label="Email"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  autoCapitalize="none"
-                  inputMode="email"
-                  cursorColor={"#fff"}
-                  placeholder="Podaj swój adres email"
-                  error={!!errors.email}
-                  errorMessage={errors.email?.message}
-                />
+      {true ? (
+        <NotificationOfSuccess backToLoginScreen={backToLoginScreen} email={userEmailPrompt} />
+      ) : (
+        <>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 40}
+          >
+            <View className="flex-1 justify-center">
+              <View className="py-4">
+                <View className="items-center">
+                  <Heading fontSize="3xl">Przypominanie hasła</Heading>
+                </View>
               </View>
-            )}
-            name="email"
-          />
-        </View>
-        <View>
-          <Button onPress={handleSubmit(onSubmit)} isLoading={false}>
-            Wyślij
-          </Button>
-        </View>
-      </View>
-    </SafeAreaView>
+              <View className="space-y-4">
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <View>
+                      <Input
+                        label="Email"
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        value={value}
+                        autoCapitalize="none"
+                        inputMode="email"
+                        cursorColor={"#fff"}
+                        placeholder="Podaj swój adres email"
+                        error={!!errors.email}
+                        errorMessage={errors.email?.message}
+                      />
+                    </View>
+                  )}
+                  name="email"
+                />
+                <View>
+                  <Text className="text-gray-400">
+                    Wprowadź adres e-mail, na który chcesz otrzymać informacje dotyczace restowania hasła.
+                  </Text>
+                </View>
+              </View>
+              <View className="mt-10 space-y-4">
+                <Button onPress={handleSubmit(onSubmit)} isLoading={false}>
+                  Zresetuj hasło
+                </Button>
+                <Pressable onPress={() => navigation.goBack()}>
+                  <Text className="text-gray-50 text-center font-semibold">Wróc do logowania</Text>
+                </Pressable>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </>
+      )}
+    </Container>
   );
 };
