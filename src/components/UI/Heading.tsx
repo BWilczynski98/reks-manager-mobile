@@ -8,5 +8,5 @@ type HeadingProps = {
 };
 
 export const Heading = ({ children, fontSize = "lg" }: HeadingProps) => {
-  return <Text className={cn(`text-gray-50 text-3xl`)}>{children}</Text>;
+  return <Text className={cn(`text-gray-50 text-${fontSize}`)}>{children}</Text>;
 };
