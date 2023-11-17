@@ -9,8 +9,8 @@ type RootPropsType = {
 export const Container = ({ children }: RootPropsType) => {
   return (
     <SafeAreaView
-      style={{ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}
-      className={cn("bg-gray-950 flex-1 px-4")}
+      style={{ flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}
+      className={cn("bg-gray-950")}
     >
       {children}
     </SafeAreaView>

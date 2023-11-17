@@ -1,6 +1,8 @@
 import { AppNavigation } from "@/navigation";
 
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ReduxProvider } from "redux/provider";
 
 export default function App() {
@@ -8,7 +10,11 @@ export default function App() {
     <>
       <StatusBar style="light" />
       <ReduxProvider>
-        <AppNavigation />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <AppNavigation />
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
       </ReduxProvider>
     </>
   );

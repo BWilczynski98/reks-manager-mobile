@@ -1,5 +1,6 @@
 import { Dashboard, ForgotPassword, SignIn } from "@/screens";
-
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -13,7 +14,7 @@ type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-export type StackProps = NativeStackScreenProps<RootStackParamList, "SignIn">;
+export type StackProps = NativeStackScreenProps<RootStackParamList, "SignIn" | "ForgotPassword">;
 
 const AuthStack = () => {
   return (
@@ -24,11 +25,51 @@ const AuthStack = () => {
   );
 };
 
+const BottomTab = createBottomTabNavigator();
+
 const AppStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: false }} />
-    </Stack.Navigator>
+    <BottomTab.Navigator
+      screenOptions={() => ({
+        tabBarStyle: { backgroundColor: "#030712" },
+        tabBarActiveTintColor: "#f9fafb",
+        tabBarInactiveTintColor: "#374151",
+      })}
+    >
+      <BottomTab.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          tabBarLabel: "Podopieczni",
+          headerShown: false,
+          tabBarIcon: ({ size, color }) => {
+            return <MaterialIcons name="pets" size={size} color={color} />;
+          },
+        }}
+      />
+      <BottomTab.Screen
+        name="NewPetForm"
+        component={Dashboard}
+        options={{
+          tabBarLabel: "Stwórz profil",
+          headerShown: false,
+          tabBarIcon: ({ size, color }) => {
+            return <Ionicons name="add-circle" size={size} color={color} />;
+          },
+        }}
+      />
+      <BottomTab.Screen
+        name="Settings"
+        component={Dashboard}
+        options={{
+          tabBarLabel: "Ustawienia",
+          headerShown: false,
+          tabBarIcon: ({ size, color }) => {
+            return <Ionicons name="settings" size={size} color={color} />;
+          },
+        }}
+      />
+    </BottomTab.Navigator>
   );
 };
 

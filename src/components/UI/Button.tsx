@@ -6,11 +6,12 @@ type ButtonProps = {
   children: React.ReactNode;
   onPress?: () => void;
   isLoading?: boolean;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "destructive";
 };
 
 export const Button = ({ children, onPress, isLoading, variant = "primary" }: ButtonProps) => {
   const outline = variant === "outline";
+  const destructive = variant === "destructive";
 
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
@@ -19,6 +20,8 @@ export const Button = ({ children, onPress, isLoading, variant = "primary" }: Bu
           "bg-transparent": outline,
           border: outline,
           "border-gray-700": outline,
+          "bg-red-600": destructive,
+          "border-red-600": destructive,
         })}
       >
         {isLoading ? (
