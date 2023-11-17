@@ -84,7 +84,7 @@ export const ForgotPassword = ({ navigation }: StackProps) => {
           </Text>
         </Pressable>
       </View>
-      {true ? (
+      {isSuccess ? (
         <NotificationOfSuccess backToLoginScreen={backToLoginScreen} email={userEmailPrompt} />
       ) : (
         <>
