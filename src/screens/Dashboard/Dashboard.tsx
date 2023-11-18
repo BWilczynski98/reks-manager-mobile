@@ -1,7 +1,7 @@
 import { ListOfAnimals, SearchBar } from "@/components";
 import { type BottomSheetModal } from "@gorhom/bottom-sheet";
-import React, { Suspense, useCallback, useMemo, useReducer, useRef, useState } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Platform, StatusBar, Text, View } from "react-native";
+import React, { useCallback, useMemo, useReducer, useRef, useState } from "react";
+import { ActivityIndicator, KeyboardAvoidingView, Platform, StatusBar, View } from "react-native";
 import { useGetAnimalsQuery } from "redux/services/animal";
 import { FilterSheet } from "./components/FilterSheet";
 import { type FilterState } from "./helpers/filters";
@@ -51,7 +51,6 @@ export const Dashboard = () => {
 
   const [filtersState, dispatch] = useReducer(filtersReducer, initialState);
   const [searchQuery, setSearchQuery] = useState("");
-  const [numberOfProfiles, setNumberOfProfiles] = useState(animals?.length);
 
   const clearFilter = () => dispatch({ type: "RESET" });
 
@@ -91,11 +90,11 @@ export const Dashboard = () => {
       );
     });
   }, [searchQuery, animals, filtersState]);
-
   //
 
   return (
     <>
+      <StatusBar backgroundColor={"#1f2937"} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -108,9 +107,6 @@ export const Dashboard = () => {
 
         {/* List of animals */}
         <View style={{ flex: 1 }}>
-          <View className="px-4">
-            <Text className="text-gray-50 font-semibold">Liczba profili: {animals?.length}</Text>
-          </View>
           {isLoading ? (
             <View className="h-full w-full items-center justify-center">
               <ActivityIndicator size={"large"} color={"#8b5cf6"} />
