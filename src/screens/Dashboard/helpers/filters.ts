@@ -1,39 +1,37 @@
-import { FontAwesome5 } from "@expo/vector-icons";
-
-type FilterAnimalGenreType = {
-  icon: string;
-  value: string;
-};
-
-type FilterAnimalGenderType = FilterAnimalGenreType;
-
-type FilterAnimalStatusType = {
+type filterCriteria = {
   label: string;
   value: string;
 };
 
-type FilterAnimalResidenceType = FilterAnimalStatusType;
+type filterConditions = filterCriteria[];
 
-const filterAnimalGenre: FilterAnimalGenreType[] = [
-  { icon: "cat", value: "cat" },
-  { icon: "dog", value: "dog" },
+export type FilterState = {
+  typeFilters: string[];
+  genderFilters: string[];
+  locationFilters: string[];
+  statusFilters: string[];
+};
+
+const filterAnimalType: filterConditions = [
+  { label: "Kot", value: "KOT" },
+  { label: "Pies", value: "PIES" },
 ];
 
-const filterAnimalGender: FilterAnimalGenderType[] = [
-  { icon: "male-symbol", value: "male" },
-  { icon: "female-symbol", value: "female" },
+const filterAnimalGender: filterConditions = [
+  { label: "Samiec", value: "SAMIEC" },
+  { label: "Samica", value: "SAMICA" },
 ];
 
-const filterAnimalStatus: FilterAnimalStatusType[] = [
+const filterAnimalStatus: filterConditions = [
   { label: "Adoptowany", value: "ZAADOPTOWANY" },
   { label: "Do adopcji", value: "DO_ADOPCJI" },
   { label: "Nie do adopcji", value: "NIE_DO_ADOPCJI" },
   { label: "Kwarantanna", value: "KWARANTANNA" },
 ];
 
-const filterAnimalResidence: FilterAnimalResidenceType[] = [
-  { label: "Siedziba", value: "Siedziba" },
-  { label: "Dom tymczasowy", value: "Dom tymczasowy" },
+const filterAnimalLocation: filterConditions = [
+  { label: "Siedziba", value: "SCHRONISKO" },
+  { label: "Dom tymczasowy", value: "TYMCZASOWY_DOM" },
 ];
 
-export { filterAnimalGenre, filterAnimalGender, filterAnimalStatus, filterAnimalResidence };
+export { filterAnimalGender, filterAnimalType, filterAnimalLocation, filterAnimalStatus };

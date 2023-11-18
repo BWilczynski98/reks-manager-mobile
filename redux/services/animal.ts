@@ -100,14 +100,9 @@ const injectedRtkApi = api.injectEndpoints({
         url: "/api/animals/",
         method: "GET",
       }),
-      // transformResponse: (response: Root): Animal[] => {
-      //   return response.map((animal) => {
-      //     return {
-      //       id: animal.id,
-      //       name: animal.name,
-      //     };
-      //   });
-      // },
+      transformResponse: (response: Root): Root => {
+        return response.reverse();
+      },
     }),
   }),
 });
