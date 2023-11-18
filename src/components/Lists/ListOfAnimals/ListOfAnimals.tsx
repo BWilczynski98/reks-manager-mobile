@@ -14,7 +14,7 @@ export const ListOfAnimals = ({ animals, refreshing, onRefresh }: ListOfAnimalsT
     <View style={{ height: "100%" }}>
       {/* <Text className="text-gray-50">ListOfAnimals</Text> */}
       <FlatList
-        data={animals?.reverse()}
+        data={animals}
         renderItem={({ item }) => (
           <AnimalTile
             name={item.name}
