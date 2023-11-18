@@ -1,5 +1,5 @@
 import { cn } from "@/lib/cn";
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import { Keyboard, Pressable, Text, TextInput, View } from "react-native";
 
@@ -24,7 +24,7 @@ export const SearchBar = ({ searchQuery, openBottomSheet }: SearchBarType) => {
   }, []);
 
   return (
-    <View className="px-4  rounded-b-xl">
+    <View className="px-4 rounded-b-xl bg-gray-800">
       <Pressable
         onPress={() => {
           inputRef.current ? inputRef.current.focus() : null;
@@ -56,15 +56,6 @@ export const SearchBar = ({ searchQuery, openBottomSheet }: SearchBarType) => {
           >
             <MaterialIcons name="filter-list-alt" size={24} color="white" />
             <Text className="text-gray-50">Filtry</Text>
-          </Pressable>
-        </View>
-        <View className="border border-gray-700 rounded-lg overflow-hidden">
-          <Pressable
-            className="flex-row items-center justify-center px-4 py-2 space-x-2"
-            android_ripple={{ color: "#374151" }}
-          >
-            <MaterialCommunityIcons name="sort-calendar-ascending" size={24} color="white" />
-            <Text className="text-gray-50">Data przyjęcia</Text>
           </Pressable>
         </View>
       </View>

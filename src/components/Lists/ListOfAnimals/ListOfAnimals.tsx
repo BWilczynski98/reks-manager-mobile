@@ -1,7 +1,7 @@
-import { View, Text, FlatList, SafeAreaView, RefreshControl } from "react-native";
-import React from "react";
 import { AnimalTile } from "@/components/Tiles";
-import { Root, useGetAnimalsQuery } from "redux/services/animal";
+import React from "react";
+import { FlatList, RefreshControl, View } from "react-native";
+import { Root } from "redux/services/animal";
 
 type ListOfAnimalsType = {
   animals: Root | undefined;
@@ -12,7 +12,6 @@ type ListOfAnimalsType = {
 export const ListOfAnimals = ({ animals, refreshing, onRefresh }: ListOfAnimalsType) => {
   return (
     <View style={{ height: "100%" }}>
-      {/* <Text className="text-gray-50">ListOfAnimals</Text> */}
       <FlatList
         data={animals}
         renderItem={({ item }) => (
@@ -27,7 +26,6 @@ export const ListOfAnimals = ({ animals, refreshing, onRefresh }: ListOfAnimalsT
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
         keyExtractor={(item) => item?.id}
         contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 16 }}
-        // columnWrapperStyle={{ columnGap: 2, justifyContent: "space-between" }}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
