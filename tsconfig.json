@@ -1,6 +1,6 @@
 {
   "extends": "expo/tsconfig.base",
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/hooks/useIsFocused.js", "src/hooks/useIsFocused.js"],
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
