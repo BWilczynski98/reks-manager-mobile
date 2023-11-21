@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useReducer, useRef, useState } from "react
 import { ActivityIndicator, KeyboardAvoidingView, Platform, StatusBar, View } from "react-native";
 import { useGetAnimalsQuery } from "redux/services/animal";
 import { FilterSheet } from "./components/FilterSheet";
+import { FocusAwareStatusBar } from "./components/FocusAwareStatusBar";
 import { type FilterState } from "./helpers/filters";
 
 export const Dashboard = () => {
@@ -94,7 +95,7 @@ export const Dashboard = () => {
 
   return (
     <>
-      <StatusBar backgroundColor={"#1f2937"} />
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor="#1f2937" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -106,7 +107,7 @@ export const Dashboard = () => {
         </View>
 
         {/* List of animals */}
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: "#030712" }}>
           {isLoading ? (
             <View className="h-full w-full items-center justify-center">
               <ActivityIndicator size={"large"} color={"#8b5cf6"} />
