@@ -6,27 +6,31 @@ import { Controller, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useToast } from "react-native-toast-notifications";
+import { useGetAnimalsQuery, usePostAnimalMutation } from "redux/services/animal";
 import { FocusAwareStatusBar } from "../Dashboard/components/FocusAwareStatusBar";
 import { AnimalProfileFormData, animalProfileFormSchema } from "./helpers/schema";
 const dayjs = require("dayjs");
 
 const initialState = {
   name: "",
-  type: "CAT",
+  animal_type: "KOT",
   gender: "SAMIEC",
-  bread: "",
-  birthDate: undefined,
+  breed: "",
+  birth_date: undefined,
   description: "",
   status: "DO_ADOPCJI",
-  locationWhereFound: "",
-  dateWhenFound: undefined,
+  location_where_found: "",
+  date_when_found: undefined,
   residence: "SCHRONISKO",
   temporaryHome: "",
-  descriptionOfHealth: "",
+  description_of_health: "",
   // image: "",
 };
 
 export const CreateProfile = () => {
+  const { refetch } = useGetAnimalsQuery();
+  const [postAnimal, { isLoading }] = usePostAnimalMutation();
   const {
     control,
     handleSubmit,
@@ -36,9 +40,23 @@ export const CreateProfile = () => {
     resolver: yupResolver(animalProfileFormSchema),
     defaultValues: initialState,
   });
+  const toast = useToast();
 
   const onSubmit = async (data: AnimalProfileFormData) => {
-    console.log("🚀 ~ file: CreateProfile.tsx:32 ~ onSubmit ~ data:", data);
+    const body = {
+      ...data,
+      birth_date: dayjs(data.birth_date).format("YYYY-MM-DD"),
+      date_when_found: dayjs(data.date_when_found).format("YYYY-MM-DD"),
+    };
+    await postAnimal(body)
+      .unwrap()
+      .then((res) => {
+        toast.show("Utworzono nowy profil", { type: "success", placement: "top" });
+      })
+      .catch((err) => console.log(err));
+    await refetch();
+
+    resetForm();
   };
 
   const resetForm = () => {
@@ -47,8 +65,8 @@ export const CreateProfile = () => {
 
   // helpers to render checkboxes
   const animalType = [
-    { label: "Kot", value: "CAT" },
-    { label: "Pies", value: "DOG" },
+    { label: "Kot", value: "KOT" },
+    { label: "Pies", value: "PIES" },
   ];
 
   const animalGender = [
@@ -57,7 +75,7 @@ export const CreateProfile = () => {
   ];
   const animalResidence = [
     { label: "Siedziba", value: "SCHRONISKO" },
-    { label: "Dom tymczasowy", value: "TYMCZASOWY_DOM" },
+    // { label: "Dom tymczasowy", value: "TYMCZASOWY_DOM" },
   ];
   const animalStatus = [
     { label: "Do adopcji", value: "DO_ADOPCJI" },
@@ -108,7 +126,9 @@ export const CreateProfile = () => {
               return (
                 <View className="space-y-4">
                   <View>
-                    <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.type })}>
+                    <Text
+                      className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.animal_type })}
+                    >
                       Typ *
                     </Text>
                   </View>
@@ -127,7 +147,7 @@ export const CreateProfile = () => {
                 </View>
               );
             }}
-            name="type"
+            name="animal_type"
           />
           <Controller
             control={control}
@@ -136,7 +156,7 @@ export const CreateProfile = () => {
               return (
                 <View className="space-y-4">
                   <View>
-                    <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.type })}>
+                    <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.gender })}>
                       Płeć *
                     </Text>
                   </View>
@@ -164,13 +184,13 @@ export const CreateProfile = () => {
               <DatePicker
                 value={value ? dayjs(value).format("DD MMMM YYYY") : undefined}
                 onConfirm={onChange}
-                error={!!errors.birthDate}
-                errorMessage={errors.birthDate?.message}
+                error={!!errors.birth_date}
+                errorMessage={errors.birth_date?.message}
                 label="Data urodzenia *"
                 placeholder="Podaj szacowaną datę urodzenia"
               />
             )}
-            name="birthDate"
+            name="birth_date"
           />
           <Controller
             control={control}
@@ -183,11 +203,11 @@ export const CreateProfile = () => {
                 onChangeText={onChange}
                 value={value}
                 autoCorrect={false}
-                error={!!errors.bread}
-                errorMessage={errors.bread?.message}
+                error={!!errors.breed}
+                errorMessage={errors.breed?.message}
               />
             )}
-            name="bread"
+            name="breed"
           />
           <Controller
             control={control}
@@ -200,11 +220,11 @@ export const CreateProfile = () => {
                 onChangeText={onChange}
                 value={value}
                 autoCorrect={false}
-                error={!!errors.locationWhereFound}
-                errorMessage={errors.locationWhereFound?.message}
+                error={!!errors.location_where_found}
+                errorMessage={errors.location_where_found?.message}
               />
             )}
-            name="locationWhereFound"
+            name="location_where_found"
           />
 
           <Controller
@@ -218,12 +238,12 @@ export const CreateProfile = () => {
                   console.log(date);
                   onChange(date);
                 }}
-                error={!!errors.dateWhenFound}
-                errorMessage={errors.dateWhenFound?.message}
+                error={!!errors.date_when_found}
+                errorMessage={errors.date_when_found?.message}
                 placeholder="Podaj dzień przyjęcia do schroniska"
               />
             )}
-            name="dateWhenFound"
+            name="date_when_found"
           />
           <Controller
             control={control}
@@ -232,7 +252,11 @@ export const CreateProfile = () => {
               return (
                 <View className="space-y-4">
                   <View>
-                    <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.type })}>
+                    <Text
+                      className={cn("text-gray-50 font-semibold text-base", {
+                        "text-red-500": !!errors.residence,
+                      })}
+                    >
                       Gdzie przebywa *
                     </Text>
                   </View>
@@ -260,7 +284,9 @@ export const CreateProfile = () => {
               return (
                 <View className="space-y-4">
                   <View>
-                    <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.type })}>
+                    <Text
+                      className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.animal_type })}
+                    >
                       Status *
                     </Text>
                   </View>
@@ -291,14 +317,14 @@ export const CreateProfile = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                error={!!errors.bread}
-                errorMessage={errors.bread?.message}
+                error={!!errors.description_of_health}
+                errorMessage={errors.description_of_health?.message}
                 multiline={true}
                 numberOfLines={8}
                 style={{ textAlignVertical: "top" }}
               />
             )}
-            name="descriptionOfHealth"
+            name="description_of_health"
           />
           <Controller
             control={control}
@@ -310,8 +336,8 @@ export const CreateProfile = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                error={!!errors.bread}
-                errorMessage={errors.bread?.message}
+                error={!!errors.description}
+                errorMessage={errors.description?.message}
                 multiline={true}
                 numberOfLines={8}
                 style={{ textAlignVertical: "top" }}
@@ -320,7 +346,9 @@ export const CreateProfile = () => {
             name="description"
           />
           <View className="my-4">
-            <Button onPress={handleSubmit(onSubmit)}>Stwórz profil</Button>
+            <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
+              Stwórz profil
+            </Button>
           </View>
         </View>
       </KeyboardAwareScrollView>
