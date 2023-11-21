@@ -1,10 +1,13 @@
-import { Dashboard, ForgotPassword, SignIn } from "@/screens";
+import { CreateProfile, Dashboard, ForgotPassword, SignIn } from "@/screens";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useAppSelector } from "redux/hooks";
+const dayjs = require("dayjs");
+require("dayjs/locale/pl");
+dayjs.locale("pl");
 
 type RootStackParamList = {
   SignIn: undefined;
@@ -49,7 +52,7 @@ const AppStack = () => {
       />
       <BottomTab.Screen
         name="NewPetForm"
-        component={Dashboard}
+        component={CreateProfile}
         options={{
           tabBarLabel: "Stwórz profil",
           headerShown: false,
