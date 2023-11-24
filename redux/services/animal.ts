@@ -26,9 +26,6 @@ const injectedRtkApi = api.injectEndpoints({
         url: "/api/animals/",
         method: "GET",
       }),
-      transformResponse: (response: Animals): Animals => {
-        return response.reverse();
-      },
     }),
     postAnimal: build.mutation<AnimalPostResponse, AnimalBodyType>({
       query: (body) => ({

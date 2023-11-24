@@ -82,14 +82,24 @@ export const Dashboard = () => {
   }, [searchQuery, animals]);
 
   const filteredAnimals = useMemo(() => {
-    return searchedAnimals?.filter((animal) => {
-      return (
-        (filtersState.typeFilters.length === 0 || filtersState.typeFilters.includes(animal.animal_type)) &&
-        (filtersState.genderFilters.length === 0 || filtersState.genderFilters.includes(animal.gender)) &&
-        (filtersState.locationFilters.length === 0 || filtersState.locationFilters.includes(animal.residence)) &&
-        (filtersState.statusFilters.length === 0 || filtersState.statusFilters.includes(animal.status))
-      );
-    });
+    return searchedAnimals
+      ?.filter((animal) => {
+        return (
+          (filtersState.typeFilters.length === 0 || filtersState.typeFilters.includes(animal.animal_type)) &&
+          (filtersState.genderFilters.length === 0 || filtersState.genderFilters.includes(animal.gender)) &&
+          (filtersState.locationFilters.length === 0 || filtersState.locationFilters.includes(animal.residence)) &&
+          (filtersState.statusFilters.length === 0 || filtersState.statusFilters.includes(animal.status))
+        );
+      })
+      .sort((a, b) => {
+        const formatToUnixTimestamp = (dateToFormat: string): number => {
+          const date = new Date(dateToFormat);
+          const unixTimestamp = date.getTime() / 1000;
+          return unixTimestamp;
+        };
+        // Sort by date from newest to oldest
+        return formatToUnixTimestamp(b.created_at) - formatToUnixTimestamp(a.created_at);
+      });
   }, [searchQuery, animals, filtersState]);
   //
 
