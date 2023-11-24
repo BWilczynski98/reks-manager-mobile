@@ -1,10 +1,9 @@
 import { AnimalTile } from "@/components/Tiles";
 import React from "react";
 import { FlatList, RefreshControl, View } from "react-native";
-import { Root } from "redux/services/animal";
 
 type ListOfAnimalsType = {
-  animals: Root | undefined;
+  animals: Animals | undefined;
   refreshing: boolean;
   onRefresh: () => void;
 };
