@@ -21,7 +21,7 @@ export const animalProfileFormSchema = yup.object({
     then: (schema) => schema.required(errorsDictionary.required),
   }),
   description_of_health: yup.string(),
-  // image: yup.string(),
+  image: yup.mixed(),
 });
 
 export type AnimalProfileFormData = yup.InferType<typeof animalProfileFormSchema>;

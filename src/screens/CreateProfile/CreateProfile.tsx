@@ -1,4 +1,5 @@
 import { Button, Checkbox, Container, DatePicker, Input } from "@/components";
+import { ImagePicker } from "@/components/ImagePicker";
 import { cn } from "@/lib";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
@@ -25,7 +26,7 @@ const initialState = {
   residence: "SCHRONISKO",
   temporaryHome: "",
   description_of_health: "",
-  // image: "",
+  image: undefined,
 };
 
 export const CreateProfile = () => {
@@ -102,6 +103,11 @@ export const CreateProfile = () => {
         showsVerticalScrollIndicator={true}
       >
         <View style={{ rowGap: 14, marginVertical: 10, paddingHorizontal: 16 }}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => <ImagePicker onChange={onChange} value={value} />}
+            name="image"
+          />
           <Controller
             control={control}
             rules={{ required: true }}
