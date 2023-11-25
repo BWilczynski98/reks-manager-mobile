@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ExpoImagePicker from "expo-image-picker";
+import mime from "mime";
 import React, { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { Button } from "../UI";
@@ -21,16 +22,14 @@ export const ImagePicker = ({ onChange, value }: Props) => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       const file = result.assets[0];
-      let parts = file.uri.split("/");
-      let filenameWithExtension = parts[parts.length - 1];
-      let filenameWithoutExtension = filenameWithExtension.replace(".jpeg", "");
-      console.log("🚀 ~ file: ImagePicker.tsx:29 ~ pickImage ~ filenameWithoutExtension:", filenameWithoutExtension);
+      console.log(file);
+      const imageName = file.uri.split("/").pop();
+      const imageUri = "file:///" + file.uri.split("file:/").join("");
+
       setImage(result.assets[0].uri);
-      onChange(JSON.stringify({ name: "image_name", uri: file.uri, type: "image" }));
+      onChange({ name: imageName, uri: imageUri, type: mime.getType(imageUri) });
     }
   };
 
