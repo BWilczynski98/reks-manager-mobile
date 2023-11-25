@@ -44,14 +44,24 @@ export const CreateProfile = () => {
   const toast = useToast();
 
   const onSubmit = async (data: AnimalProfileFormData) => {
-    const body = {
-      ...data,
-      birth_date: dayjs(data.birth_date).format("YYYY-MM-DD"),
-      date_when_found: dayjs(data.date_when_found).format("YYYY-MM-DD"),
-    };
-    await postAnimal(body)
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("animal_type", data.animal_type);
+    formData.append("gender", data.gender);
+    formData.append("breed", data.breed ? data.breed : "");
+    formData.append("birth_date", dayjs(data.birth_date).format("YYYY-MM-DD"));
+    formData.append("description", data.description ? data.description : "");
+    formData.append("status", data.status);
+    formData.append("location_where_found", data.location_where_found);
+    formData.append("date_when_found", dayjs(data.date_when_found).format("YYYY-MM-DD"));
+    formData.append("residence", data.residence);
+    formData.append("temporary_home", data.temporary_home ? data.temporary_home : "");
+    formData.append("description_of_health", data.description_of_health ? data.description_of_health : "");
+    formData.append("image", data.image);
+
+    await postAnimal(formData)
       .unwrap()
-      .then((res) => {
+      .then(() => {
         toast.show("Utworzono nowy profil", { type: "success", placement: "top" });
       })
       .catch((err) => console.log(err));
