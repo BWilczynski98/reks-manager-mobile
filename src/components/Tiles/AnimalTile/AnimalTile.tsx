@@ -1,16 +1,13 @@
 import { Button } from "@/components/UI";
 import { cn, transformAnimalStatus } from "@/lib";
+import { ScreenNames } from "@/navigation/screenNames";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Image, Text, View, ImageBackground } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Image, Text, View } from "react-native";
 
 type AnimalTileType = {
-  name: string;
-  type: string;
-  gender: string;
-  status: string;
-  image: string;
+  animal: Animal;
 };
 
 type RowType = { label: string; value: string };
@@ -40,11 +37,12 @@ const Avatar = () => {
   );
 };
 
-export const AnimalTile = ({ name, type, gender, status, image }: AnimalTileType) => {
+export const AnimalTile = ({ animal }: AnimalTileType) => {
+  const { image, name, animal_type, gender, status } = animal;
   const navigation = useNavigation<any>();
 
   const navigateToAnimalTile = () => {
-    navigation.navigate("AnimalDetails");
+    navigation.navigate(ScreenNames.ANIMAL_PROFILE, { animalData: animal });
   };
 
   return (
@@ -66,7 +64,7 @@ export const AnimalTile = ({ name, type, gender, status, image }: AnimalTileType
       <View className="px-4 py-6 space-y-4">
         <View>
           <Row label="imię" value={name} />
-          <Row label="typ" value={type} />
+          <Row label="typ" value={animal_type} />
           <Row label="płeć" value={gender} />
           <View className="flex-row space-x-2">
             <Text className="text-gray-300 text-lg font-light">Status:</Text>
@@ -82,7 +80,7 @@ export const AnimalTile = ({ name, type, gender, status, image }: AnimalTileType
           </View>
         </View>
         <View>
-          <Button>Zobacz profil</Button>
+          <Button onPress={navigateToAnimalTile}>Zobacz profil</Button>
         </View>
       </View>
     </View>
