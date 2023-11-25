@@ -1,0 +1,1 @@
+export { AnimalProfile } from "./AnimalProfile";
