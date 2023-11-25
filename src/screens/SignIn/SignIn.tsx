@@ -1,5 +1,5 @@
 import { Button, Container, Heading, Input } from "@/components";
-import { StackProps } from "@/navigation/appNavigation";
+import { UnauthorizedStackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { userAuthFormSchema } from "./helpers/schema";
 
 type AuthorizationFormData = yup.InferType<typeof userAuthFormSchema>;
 
-export const SignIn = ({ navigation }: StackProps) => {
+export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
   const [
     signIn,
     {
