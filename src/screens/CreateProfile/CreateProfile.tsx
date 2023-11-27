@@ -8,9 +8,15 @@ import { Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { useGetAnimalsQuery, usePostAnimalMutation } from "redux/services/animal";
+import {
+  useGetAnimalsQuery,
+  usePostAnimalMutation,
+} from "redux/services/animal";
 import { FocusAwareStatusBar } from "../Dashboard/components/FocusAwareStatusBar";
-import { AnimalProfileFormData, animalProfileFormSchema } from "./helpers/schema";
+import {
+  AnimalProfileFormData,
+  animalProfileFormSchema,
+} from "./helpers/schema";
 const dayjs = require("dayjs");
 
 const initialState = {
@@ -31,7 +37,7 @@ const initialState = {
 
 export const CreateProfile = () => {
   const { refetch } = useGetAnimalsQuery();
-  const [postAnimal, { isLoading }] = usePostAnimalMutation();
+  const [postAnimal, { isLoading, isSuccess }] = usePostAnimalMutation();
   const {
     control,
     handleSubmit,
@@ -53,16 +59,28 @@ export const CreateProfile = () => {
     formData.append("description", data.description ? data.description : "");
     formData.append("status", data.status);
     formData.append("location_where_found", data.location_where_found);
-    formData.append("date_when_found", dayjs(data.date_when_found).format("YYYY-MM-DD"));
+    formData.append(
+      "date_when_found",
+      dayjs(data.date_when_found).format("YYYY-MM-DD"),
+    );
     formData.append("residence", data.residence);
-    formData.append("temporary_home", data.temporary_home ? data.temporary_home : "");
-    formData.append("description_of_health", data.description_of_health ? data.description_of_health : "");
-    formData.append("image", data.image);
+    formData.append(
+      "temporary_home",
+      data.temporary_home ? data.temporary_home : "",
+    );
+    formData.append(
+      "description_of_health",
+      data.description_of_health ? data.description_of_health : "",
+    );
+    data.image && formData.append("image", data.image);
 
     await postAnimal(formData)
       .unwrap()
       .then(() => {
-        toast.show("Utworzono nowy profil", { type: "success", placement: "top" });
+        toast.show("Utworzono nowy profil", {
+          type: "success",
+          placement: "top",
+        });
       })
       .catch((err) => console.log(err));
     await refetch();
@@ -99,7 +117,9 @@ export const CreateProfile = () => {
     <Container>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="#1f2937" />
       <View className="flex-row bg-gray-800 px-4 py-4 items-center justify-between">
-        <Text className="text-gray-50 text-lg font-semibold ">Stwórz nowy profil</Text>
+        <Text className="text-gray-50 text-lg font-semibold ">
+          Stwórz nowy profil
+        </Text>
         <TouchableOpacity activeOpacity={0.75} onPress={resetForm}>
           <Text className="text-violet-500">Wyczyść</Text>
         </TouchableOpacity>
@@ -115,7 +135,13 @@ export const CreateProfile = () => {
         <View style={{ rowGap: 14, marginVertical: 10, paddingHorizontal: 16 }}>
           <Controller
             control={control}
-            render={({ field: { onChange, value } }) => <ImagePicker onChange={onChange} value={value} />}
+            render={({ field: { onChange, value } }) => (
+              <ImagePicker
+                onChange={onChange}
+                value={value}
+                isSuccess={isSuccess}
+              />
+            )}
             name="image"
           />
           <Controller
@@ -143,7 +169,9 @@ export const CreateProfile = () => {
                 <View className="space-y-4">
                   <View>
                     <Text
-                      className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.animal_type })}
+                      className={cn("text-gray-50 font-semibold text-base", {
+                        "text-red-500": !!errors.animal_type,
+                      })}
                     >
                       Typ *
                     </Text>
@@ -172,7 +200,11 @@ export const CreateProfile = () => {
               return (
                 <View className="space-y-4">
                   <View>
-                    <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.gender })}>
+                    <Text
+                      className={cn("text-gray-50 font-semibold text-base", {
+                        "text-red-500": !!errors.gender,
+                      })}
+                    >
                       Płeć *
                     </Text>
                   </View>
@@ -301,7 +333,9 @@ export const CreateProfile = () => {
                 <View className="space-y-4">
                   <View>
                     <Text
-                      className={cn("text-gray-50 font-semibold text-base", { "text-red-500": !!errors.animal_type })}
+                      className={cn("text-gray-50 font-semibold text-base", {
+                        "text-red-500": !!errors.animal_type,
+                      })}
                     >
                       Status *
                     </Text>

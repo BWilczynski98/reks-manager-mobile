@@ -1,16 +1,17 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ExpoImagePicker from "expo-image-picker";
 import mime from "mime";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { Button } from "../UI";
 
 type Props = {
   onChange: (e: {} | undefined) => void;
   value: string | undefined | File;
+  isSuccess: boolean;
 };
 
-export const ImagePicker = ({ onChange, value }: Props) => {
+export const ImagePicker = ({ onChange, value, isSuccess }: Props) => {
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
@@ -29,7 +30,11 @@ export const ImagePicker = ({ onChange, value }: Props) => {
       const imageUri = "file:///" + file.uri.split("file:/").join("");
 
       setImage(result.assets[0].uri);
-      onChange({ name: imageName, uri: imageUri, type: mime.getType(imageUri) });
+      onChange({
+        name: imageName,
+        uri: imageUri,
+        type: mime.getType(imageUri),
+      });
     }
   };
 
@@ -38,11 +43,22 @@ export const ImagePicker = ({ onChange, value }: Props) => {
     onChange(undefined);
   };
 
+  useEffect(() => {
+    const clearImage = () => {
+      setImage(null);
+    };
+
+    clearImage();
+  }, [isSuccess]);
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {image && (
         <View className="w-full relative">
-          <Image source={{ uri: image }} style={{ width: "100%", height: 208, borderRadius: 10 }} />
+          <Image
+            source={{ uri: image }}
+            style={{ width: "100%", height: 208, borderRadius: 10 }}
+          />
           <Pressable className="absolute right-4 top-2" onPress={deleteImage}>
             <Text className="text-red-500">Usuń</Text>
           </Pressable>
