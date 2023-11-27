@@ -2,10 +2,109 @@ import { Button } from "@/components";
 import { cn, transformAnimalStatus } from "@/lib";
 import { AuthorizedStackProps } from "@/navigation/appNavigation";
 import { MaterialIcons } from "@expo/vector-icons";
-import React from "react";
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+} from "react-native";
+import {
+  useDeleteAnimalMutation,
+  useGetAnimalsQuery,
+} from "redux/services/animal";
+import { useToast } from "react-native-toast-notifications";
 
-const transformAnimalGender = (type: AnimalType, gender: AnimalGender): string => {
+type ConfirmationModalProps = {
+  modalIsVisible: boolean;
+  closeModal: () => void;
+  profileName: string;
+  isLoading: boolean;
+  onConfirm: () => void;
+};
+
+const ConfirmationModal = ({
+  modalIsVisible,
+  closeModal,
+  profileName,
+  isLoading,
+  onConfirm,
+}: ConfirmationModalProps) => {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Modal
+        visible={modalIsVisible}
+        transparent={true}
+        animationType="fade"
+        statusBarTranslucent={true}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          <View
+            style={{
+              paddingVertical: 18,
+              paddingHorizontal: 20,
+              backgroundColor: "#1f2937",
+              borderRadius: 20,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+              width: "95%",
+              rowGap: 16,
+            }}
+          >
+            <View>
+              <Text className="text-gray-50 text-2xl font-semibold">
+                Potwierdź usuwanie profilu
+              </Text>
+            </View>
+            <View>
+              <Text className="text-gray-300 text-xl tracking-wide">
+                Czy na pewno chcesz usunąć profil zwierzęcia o imieniu{" "}
+                <Text className="font-semibold">{profileName}?</Text>
+              </Text>
+            </View>
+            <View className="flex-row justify-end space-x-3">
+              <View className="w-1/3">
+                <Button variant="outline" onPress={closeModal}>
+                  Anuluj
+                </Button>
+              </View>
+              <View className="w-1/3">
+                <Button
+                  variant="destructive"
+                  onPress={onConfirm}
+                  isLoading={isLoading}
+                >
+                  Usuń profil
+                </Button>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+const transformAnimalGender = (
+  type: AnimalType,
+  gender: AnimalGender,
+): string => {
   let animalGender = "";
 
   const genderOfDogs = () => {
@@ -19,18 +118,60 @@ const transformAnimalGender = (type: AnimalType, gender: AnimalGender): string =
 };
 
 export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
+  const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
+  const { refetch: refetchAnimals } = useGetAnimalsQuery();
   const animal = route.params?.animalData;
-  const { status } = animal;
+  const {
+    status,
+    slug,
+    image,
+    name,
+    gender,
+    animal_type,
+    birth_date,
+    breed,
+    description,
+  } = animal;
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const toast = useToast();
 
   const handleScreenBack = () => {
     navigation.goBack();
   };
+
+  const handleOpenModal = () => setModalIsVisible(true);
+  const handleCloseModal = () => setModalIsVisible(false);
+
+  const handleDeleteAnimalProfile = async () => {
+    await deleteAnimal(slug)
+      .unwrap()
+      .then(() => {
+        handleCloseModal();
+        toast.show("Profil pomyślnie usunięty", {
+          placement: "top",
+          type: "success",
+        });
+        refetchAnimals().then(() => handleScreenBack());
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <ScrollView style={{ flex: 1 }}>
+      <ConfirmationModal
+        modalIsVisible={modalIsVisible}
+        closeModal={handleCloseModal}
+        profileName={name}
+        isLoading={isLoading}
+        onConfirm={handleDeleteAnimalProfile}
+      />
       <View>
-        <SafeAreaView className={"absolute z-20 w-full flex-row justify-between items-center px-4 mt-10"}>
+        <SafeAreaView
+          className={
+            "absolute z-20 w-full flex-row justify-between items-center px-4 mt-10"
+          }
+        >
           <TouchableOpacity
-            className="rounded-full bg-violet-500 p-2 items-center"
+            className="rounded-full bg-gray-600 p-2 items-center"
             onPress={handleScreenBack}
             activeOpacity={0.75}
           >
@@ -38,31 +179,56 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
           </TouchableOpacity>
         </SafeAreaView>
         <View>
-          <Image
-            source={{
-              uri: animal.image,
-            }}
-            style={{ width: "100%", aspectRatio: 1 / 1, borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}
-          />
+          {image ? (
+            <Image
+              source={{
+                uri: image,
+              }}
+              style={{
+                width: "100%",
+                aspectRatio: 1,
+                borderBottomLeftRadius: 15,
+                borderBottomRightRadius: 15,
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                width: "100%",
+                aspectRatio: 1,
+                borderBottomLeftRadius: 15,
+                borderBottomRightRadius: 15,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#1f2937",
+              }}
+            >
+              <Text className={"text-gray-50 text-xl"}>Brak zdjęcia</Text>
+            </View>
+          )}
         </View>
-        <View className="px-4 my-4 space-y-6">
+        <View className="px-4 my-4 space-y-6 ">
           <View>
-            <Text className="text-4xl font-semibold text-gray-50">{animal?.name}</Text>
-            <Text className="text-xl  text-gray-300">{animal?.breed ? animal.breed : "Kundelek"}</Text>
+            <Text className="text-4xl font-semibold text-gray-50">{name}</Text>
+            <Text className="text-xl  text-gray-300">
+              {breed ? breed : "Kundelek"}
+            </Text>
           </View>
           <View className="space-y-4">
             <View className="flex-row items-center space-x-2">
               <View className="w-1 h-14 bg-yellow-300/90 rounded-sm" />
               <View>
                 <Text className="text-gray-300 text-lg">Płeć</Text>
-                <Text className="text-gray-50 text-xl">{transformAnimalGender(animal.animal_type, animal.gender)}</Text>
+                <Text className="text-gray-50 text-xl">
+                  {transformAnimalGender(animal_type, gender)}
+                </Text>
               </View>
             </View>
             <View className="flex-row items-center space-x-2">
               <View className="w-1 h-14 bg-pink-300/90 rounded-sm" />
               <View>
                 <Text className="text-gray-300 text-lg">Data urodzenia</Text>
-                <Text className="text-gray-50 text-xl">{animal.birth_date}</Text>
+                <Text className="text-gray-50 text-xl">{birth_date}</Text>
               </View>
             </View>
             <View className="flex-row items-center space-x-2">
@@ -75,17 +241,23 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
               />
               <View>
                 <Text className="text-gray-300 text-lg">Status</Text>
-                <Text className="text-gray-50 text-xl">{transformAnimalStatus(status)}</Text>
+                <Text className="text-gray-50 text-xl">
+                  {transformAnimalStatus(status)}
+                </Text>
               </View>
             </View>
             <View>
               <Text className="text-gray-50 text-2xl font-semibold">Opis</Text>
-              <Text className="text-gray-300 text-xl">{animal.description ? animal.description : "Brak opisu"}</Text>
+              <Text className="text-gray-300 text-xl">
+                {description ? description : "Brak opisu"}
+              </Text>
             </View>
           </View>
           <View style={{ rowGap: 14 }}>
             <Button variant="outline">Edytuj</Button>
-            <Button variant="destructive">Usuń</Button>
+            <Button variant="destructive" onPress={handleOpenModal}>
+              Usuń
+            </Button>
           </View>
         </View>
       </View>
