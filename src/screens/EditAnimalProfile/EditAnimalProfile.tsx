@@ -79,11 +79,9 @@ export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) =
     formData.append("description_of_health", data.description_of_health ? data.description_of_health : "");
 
     if (data.image !== animal.image) {
-      console.log(data.image);
       formData.append("image", data.image);
     }
 
-    console.log("🚀 ~ file: EditAnimalProfile.tsx:112 ~ onSubmit ~ formData:", formData);
     let response: Animal;
 
     await editingPetProfileData({ slug: animal.slug, body: formData })

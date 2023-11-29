@@ -13,9 +13,7 @@ type Props = {
 };
 
 export const ImagePicker = ({ onChange, value, isSuccess, remove }: Props) => {
-  console.log("🚀 ~ file: ImagePicker.tsx:15 ~ ImagePicker ~ isSuccess:", isSuccess);
   const [image, setImage] = useState<string | null>(value);
-  console.log("🚀 ~ file: ImagePicker.tsx:16 ~ ImagePicker ~ image:", image);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -48,7 +46,6 @@ export const ImagePicker = ({ onChange, value, isSuccess, remove }: Props) => {
 
   useEffect(() => {
     const clearImage = () => {
-      console.log("clear function in useEffect running");
       setImage(null);
     };
 
