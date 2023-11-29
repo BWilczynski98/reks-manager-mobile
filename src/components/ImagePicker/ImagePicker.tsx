@@ -7,12 +7,15 @@ import { Button } from "../UI";
 
 type Props = {
   onChange: (e: {} | undefined) => void;
-  value: string | undefined | File;
+  value: string;
   isSuccess: boolean;
+  remove?: boolean;
 };
 
-export const ImagePicker = ({ onChange, value, isSuccess }: Props) => {
-  const [image, setImage] = useState<string | null>(null);
+export const ImagePicker = ({ onChange, value, isSuccess, remove }: Props) => {
+  console.log("🚀 ~ file: ImagePicker.tsx:15 ~ ImagePicker ~ isSuccess:", isSuccess);
+  const [image, setImage] = useState<string | null>(value);
+  console.log("🚀 ~ file: ImagePicker.tsx:16 ~ ImagePicker ~ image:", image);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -45,23 +48,23 @@ export const ImagePicker = ({ onChange, value, isSuccess }: Props) => {
 
   useEffect(() => {
     const clearImage = () => {
+      console.log("clear function in useEffect running");
       setImage(null);
     };
 
-    clearImage();
+    isSuccess && clearImage();
   }, [isSuccess]);
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {image && (
         <View className="w-full relative">
-          <Image
-            source={{ uri: image }}
-            style={{ width: "100%", height: 208, borderRadius: 10 }}
-          />
-          <Pressable className="absolute right-4 top-2" onPress={deleteImage}>
-            <Text className="text-red-500">Usuń</Text>
-          </Pressable>
+          <Image source={{ uri: image }} style={{ width: "100%", height: 208, borderRadius: 10 }} />
+          {remove && (
+            <Pressable className="absolute right-4 top-2" onPress={deleteImage}>
+              <Text className="text-red-500">Usuń</Text>
+            </Pressable>
+          )}
         </View>
       )}
       {!image && (

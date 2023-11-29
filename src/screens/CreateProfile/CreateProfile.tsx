@@ -8,15 +8,11 @@ import { Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import {
-  useGetAnimalsQuery,
-  usePostAnimalMutation,
-} from "redux/services/animal";
+import { useGetAnimalsQuery, usePostAnimalMutation } from "redux/services/animal";
 import { FocusAwareStatusBar } from "../Dashboard/components/FocusAwareStatusBar";
-import {
-  AnimalProfileFormData,
-  animalProfileFormSchema,
-} from "./helpers/schema";
+import { AnimalProfileFormData, animalProfileFormSchema } from "./helpers/schema";
+import { ScreenNames } from "@/navigation/screenNames";
+
 const dayjs = require("dayjs");
 
 const initialState = {
@@ -35,7 +31,7 @@ const initialState = {
   image: undefined,
 };
 
-export const CreateProfile = () => {
+export const CreateProfile = ({ navigation }: any) => {
   const { refetch } = useGetAnimalsQuery();
   const [postAnimal, { isLoading, isSuccess }] = usePostAnimalMutation();
   const {
@@ -59,27 +55,21 @@ export const CreateProfile = () => {
     formData.append("description", data.description ? data.description : "");
     formData.append("status", data.status);
     formData.append("location_where_found", data.location_where_found);
-    formData.append(
-      "date_when_found",
-      dayjs(data.date_when_found).format("YYYY-MM-DD"),
-    );
+    formData.append("date_when_found", dayjs(data.date_when_found).format("YYYY-MM-DD"));
     formData.append("residence", data.residence);
-    formData.append(
-      "temporary_home",
-      data.temporary_home ? data.temporary_home : "",
-    );
-    formData.append(
-      "description_of_health",
-      data.description_of_health ? data.description_of_health : "",
-    );
+    formData.append("temporary_home", data.temporary_home ? data.temporary_home : "");
+    formData.append("description_of_health", data.description_of_health ? data.description_of_health : "");
     data.image && formData.append("image", data.image);
 
     await postAnimal(formData)
       .unwrap()
       .then(() => {
-        toast.show("Utworzono nowy profil", {
-          type: "success",
-          placement: "top",
+        refetch().then(() => {
+          navigation.navigate("Tabs", { screen: ScreenNames.DASHBOARD });
+          toast.show("Utworzono nowy profil", {
+            type: "success",
+            placement: "top",
+          });
         });
       })
       .catch((err) => console.log(err));
@@ -117,9 +107,7 @@ export const CreateProfile = () => {
     <Container>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="#1f2937" />
       <View className="flex-row bg-gray-800 px-4 py-4 items-center justify-between">
-        <Text className="text-gray-50 text-lg font-semibold ">
-          Stwórz nowy profil
-        </Text>
+        <Text className="text-gray-50 text-lg font-semibold ">Stwórz nowy profil</Text>
         <TouchableOpacity activeOpacity={0.75} onPress={resetForm}>
           <Text className="text-violet-500">Wyczyść</Text>
         </TouchableOpacity>
@@ -136,11 +124,7 @@ export const CreateProfile = () => {
           <Controller
             control={control}
             render={({ field: { onChange, value } }) => (
-              <ImagePicker
-                onChange={onChange}
-                value={value}
-                isSuccess={isSuccess}
-              />
+              <ImagePicker onChange={onChange} value={value} isSuccess={isSuccess} remove={true} />
             )}
             name="image"
           />
@@ -283,7 +267,6 @@ export const CreateProfile = () => {
                 label="Data zabezpieczenia *"
                 value={value ? dayjs(value).format("DD MMMM YYYY") : undefined}
                 onConfirm={(date) => {
-                  console.log(date);
                   onChange(date);
                 }}
                 error={!!errors.date_when_found}
