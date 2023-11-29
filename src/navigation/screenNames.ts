@@ -5,4 +5,5 @@ export enum ScreenNames {
   ADD_ANIMAL_FORM = "AddAnimalForm",
   SETTINGS = "Settings",
   ANIMAL_PROFILE = "AnimalProfile",
+  EDIT_ANIMAL_PROFILE = "EditAnimalProfile",
 }

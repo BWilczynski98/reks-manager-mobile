@@ -1,22 +1,12 @@
 import { Button } from "@/components";
 import { cn, transformAnimalStatus } from "@/lib";
 import { AuthorizedStackProps } from "@/navigation/appNavigation";
+import { ScreenNames } from "@/navigation/screenNames";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  Modal,
-} from "react-native";
-import {
-  useDeleteAnimalMutation,
-  useGetAnimalsQuery,
-} from "redux/services/animal";
+import { Image, Modal, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
+import { useDeleteAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
 
 type ConfirmationModalProps = {
   modalIsVisible: boolean;
@@ -35,12 +25,7 @@ const ConfirmationModal = ({
 }: ConfirmationModalProps) => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Modal
-        visible={modalIsVisible}
-        transparent={true}
-        animationType="fade"
-        statusBarTranslucent={true}
-      >
+      <Modal visible={modalIsVisible} transparent={true} animationType="fade" statusBarTranslucent={true}>
         <View
           style={{
             flex: 1,
@@ -68,9 +53,7 @@ const ConfirmationModal = ({
             }}
           >
             <View>
-              <Text className="text-gray-50 text-2xl font-semibold">
-                Potwierdź usuwanie profilu
-              </Text>
+              <Text className="text-gray-50 text-2xl font-semibold">Potwierdź usuwanie profilu</Text>
             </View>
             <View>
               <Text className="text-gray-300 text-xl tracking-wide">
@@ -85,11 +68,7 @@ const ConfirmationModal = ({
                 </Button>
               </View>
               <View className="w-1/3">
-                <Button
-                  variant="destructive"
-                  onPress={onConfirm}
-                  isLoading={isLoading}
-                >
+                <Button variant="destructive" onPress={onConfirm} isLoading={isLoading}>
                   Usuń profil
                 </Button>
               </View>
@@ -101,10 +80,7 @@ const ConfirmationModal = ({
   );
 };
 
-const transformAnimalGender = (
-  type: AnimalType,
-  gender: AnimalGender,
-): string => {
+const transformAnimalGender = (type: AnimalType, gender: AnimalGender): string => {
   let animalGender = "";
 
   const genderOfDogs = () => {
@@ -120,7 +96,7 @@ const transformAnimalGender = (
 export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
   const { refetch: refetchAnimals } = useGetAnimalsQuery();
-  const animal = route.params?.animalData;
+  const animal = route.params.animalData;
   const {
     status,
     slug,
@@ -131,12 +107,21 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
     birth_date,
     breed,
     description,
+    description_of_health,
+    location_where_found,
   } = animal;
+  console.log("🚀 ~ file: AnimalProfile.tsx:113 ~ AnimalProfile ~ status:", status);
+  console.log(slug);
+
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const toast = useToast();
 
   const handleScreenBack = () => {
     navigation.goBack();
+  };
+
+  const handleOpenEditProfileScreen = () => {
+    navigation.navigate(ScreenNames.EDIT_ANIMAL_PROFILE, { animalData: animal });
   };
 
   const handleOpenModal = () => setModalIsVisible(true);
@@ -147,11 +132,14 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
       .unwrap()
       .then(() => {
         handleCloseModal();
-        toast.show("Profil pomyślnie usunięty", {
-          placement: "top",
-          type: "success",
+
+        refetchAnimals().then(() => {
+          handleScreenBack();
+          toast.show("Profil pomyślnie usunięty", {
+            placement: "top",
+            type: "success",
+          });
         });
-        refetchAnimals().then(() => handleScreenBack());
       })
       .catch((err) => console.log(err));
   };
@@ -165,11 +153,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
         onConfirm={handleDeleteAnimalProfile}
       />
       <View>
-        <SafeAreaView
-          className={
-            "absolute z-20 w-full flex-row justify-between items-center px-4 mt-10"
-          }
-        >
+        <SafeAreaView className={"absolute z-20 w-full flex-row justify-between items-center px-4 mt-10"}>
           <TouchableOpacity
             className="rounded-full bg-gray-600 p-2 items-center"
             onPress={handleScreenBack}
@@ -207,54 +191,63 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
             </View>
           )}
         </View>
-        <View className="px-4 my-4 space-y-6 ">
+        <View className="px-4 my-4 space-y-6">
           <View>
             <Text className="text-4xl font-semibold text-gray-50">{name}</Text>
-            <Text className="text-xl  text-gray-300">
-              {breed ? breed : "Kundelek"}
-            </Text>
+            <Text className="text-xl  text-gray-300">{breed ? breed : "Mieszana"}</Text>
           </View>
           <View className="space-y-4">
-            <View className="flex-row items-center space-x-2">
-              <View className="w-1 h-14 bg-yellow-300/90 rounded-sm" />
-              <View>
-                <Text className="text-gray-300 text-lg">Płeć</Text>
-                <Text className="text-gray-50 text-xl">
-                  {transformAnimalGender(animal_type, gender)}
-                </Text>
+            <View className="flex-row flex-wrap space-y-4">
+              <View className="flex-row items-center space-x-2 basis-1/2">
+                <View className="w-1 h-14 bg-yellow-300/90 rounded-sm" />
+                <View>
+                  <Text className="text-gray-300 text-lg">Płeć</Text>
+                  <Text className="text-gray-50 text-xl">{transformAnimalGender(animal_type, gender)}</Text>
+                </View>
               </View>
-            </View>
-            <View className="flex-row items-center space-x-2">
-              <View className="w-1 h-14 bg-pink-300/90 rounded-sm" />
-              <View>
-                <Text className="text-gray-300 text-lg">Data urodzenia</Text>
-                <Text className="text-gray-50 text-xl">{birth_date}</Text>
+              <View className="flex-row items-center space-x-2 basis-1/2">
+                <View className="w-1 h-14 bg-pink-300/90 rounded-sm" />
+                <View>
+                  <Text className="text-gray-300 text-lg">Data urodzenia</Text>
+                  <Text className="text-gray-50 text-xl">{birth_date}</Text>
+                </View>
               </View>
-            </View>
-            <View className="flex-row items-center space-x-2">
-              <View
-                className={cn("w-1 h-14 bg-gray-300/90 rounded-sm", {
-                  "bg-red-300/90": status === "KWARANTANNA",
-                  "bg-blue-300/90": status === "DO_ADOPCJI",
-                  "bg-green-300/90": status === "ZAADOPTOWANY",
-                })}
-              />
-              <View>
-                <Text className="text-gray-300 text-lg">Status</Text>
-                <Text className="text-gray-50 text-xl">
-                  {transformAnimalStatus(status)}
-                </Text>
+              <View className="flex-row items-center space-x-2 basis-1/2">
+                <View className="w-1 h-14 bg-cyan-300/90 rounded-sm" />
+                <View>
+                  <Text className="text-gray-300 text-lg">Miejsce złapania</Text>
+                  <Text className="text-gray-50 text-xl">{location_where_found}</Text>
+                </View>
+              </View>
+              <View className="flex-row items-center space-x-2 basis-1/2">
+                <View
+                  className={cn("w-1 h-14 bg-gray-300/90 rounded-sm", {
+                    "bg-red-300/90": status === "KWARANTANNA",
+                    "bg-blue-300/90": status === "DO_ADOPCJI",
+                    "bg-green-300/90": status === "ZAADOPTOWANY",
+                  })}
+                />
+                <View>
+                  <Text className="text-gray-300 text-lg">Status</Text>
+                  <Text className="text-gray-50 text-xl">{transformAnimalStatus(status)}</Text>
+                </View>
               </View>
             </View>
             <View>
               <Text className="text-gray-50 text-2xl font-semibold">Opis</Text>
+              <Text className="text-gray-300 text-xl">{description ? description : "Brak opisu"}</Text>
+            </View>
+            <View>
+              <Text className="text-gray-50 text-2xl font-semibold">Stan zdrowia</Text>
               <Text className="text-gray-300 text-xl">
-                {description ? description : "Brak opisu"}
+                {description_of_health ? description_of_health : "Brak uwag"}
               </Text>
             </View>
           </View>
           <View style={{ rowGap: 14 }}>
-            <Button variant="outline">Edytuj</Button>
+            <Button variant="outline" onPress={handleOpenEditProfileScreen}>
+              Edytuj
+            </Button>
             <Button variant="destructive" onPress={handleOpenModal}>
               Usuń
             </Button>

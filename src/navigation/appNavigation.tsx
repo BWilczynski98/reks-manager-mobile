@@ -1,4 +1,5 @@
 import { AnimalProfile, CreateProfile, Dashboard, ForgotPassword, SignIn } from "@/screens";
+import { EditAnimalProfile } from "@/screens/EditAnimalProfile";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
@@ -19,6 +20,7 @@ type UnauthorizedStackParamList = {
 type AuthorizedStackParamList = {
   Tabs: undefined;
   AnimalProfile: { animalData: Animal };
+  EditAnimalProfile: { animalData: Animal };
 };
 
 // Init stacks
@@ -28,7 +30,10 @@ const BottomTab = createBottomTabNavigator();
 
 // Global types
 export type UnauthorizedStackProps = NativeStackScreenProps<UnauthorizedStackParamList>;
-export type AuthorizedStackProps = NativeStackScreenProps<AuthorizedStackParamList, "AnimalProfile">;
+export type AuthorizedStackProps = NativeStackScreenProps<
+  AuthorizedStackParamList,
+  "AnimalProfile" | "EditAnimalProfile"
+>;
 
 const Unauthorized = () => {
   return (
@@ -97,6 +102,11 @@ const Authorized = () => {
         name={ScreenNames.ANIMAL_PROFILE}
         component={AnimalProfile}
         options={{ headerShown: false }}
+      />
+      <AuthorizedStack.Screen
+        name={ScreenNames.EDIT_ANIMAL_PROFILE}
+        component={EditAnimalProfile}
+        options={{ title: "Edytuj profil", presentation: "modal", headerStyle: { backgroundColor: "#1f2937" } }}
       />
     </AuthorizedStack.Navigator>
   );
