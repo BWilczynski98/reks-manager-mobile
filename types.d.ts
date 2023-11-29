@@ -1,3 +1,13 @@
+enum AnimalType {
+  CAT = "KOT",
+  DOG = "PIES",
+}
+
+enum AnimalGender {
+  MALE = "SAMIEC",
+  FEMALE = "SAMICA",
+}
+
 type Token = {
   token: string;
 };
@@ -8,9 +18,9 @@ type Animal = {
   id: string;
   name: string;
   slug: string;
-  animal_type: string;
-  bread: string;
-  gender: string;
+  animal_type: AnimalType;
+  breed: string;
+  gender: AnimalGender;
   birth_date: string;
   description: string;
   status: string;

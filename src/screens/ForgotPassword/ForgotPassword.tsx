@@ -1,7 +1,7 @@
 import { Button, Container, Input } from "@/components";
 import { Heading } from "@/components/UI/Heading";
 import { errorsDictionary } from "@/helpers/errors-dictionary";
-import { StackProps } from "@/navigation/appNavigation";
+import { UnauthorizedStackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -51,7 +51,7 @@ const NotificationOfSuccess = ({ backToLoginScreen, email }: NotificationOfSucce
   );
 };
 
-export const ForgotPassword = ({ navigation }: StackProps) => {
+export const ForgotPassword = ({ navigation }: UnauthorizedStackProps) => {
   const {
     control,
     handleSubmit,

@@ -1,17 +1,19 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ExpoImagePicker from "expo-image-picker";
 import mime from "mime";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { Button } from "../UI";
 
 type Props = {
   onChange: (e: {} | undefined) => void;
-  value: string | undefined | File;
+  value: string;
+  isSuccess: boolean;
+  remove?: boolean;
 };
 
-export const ImagePicker = ({ onChange, value }: Props) => {
-  const [image, setImage] = useState<string | null>(null);
+export const ImagePicker = ({ onChange, value, isSuccess, remove }: Props) => {
+  const [image, setImage] = useState<string | null>(value);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -29,7 +31,11 @@ export const ImagePicker = ({ onChange, value }: Props) => {
       const imageUri = "file:///" + file.uri.split("file:/").join("");
 
       setImage(result.assets[0].uri);
-      onChange({ name: imageName, uri: imageUri, type: mime.getType(imageUri) });
+      onChange({
+        name: imageName,
+        uri: imageUri,
+        type: mime.getType(imageUri),
+      });
     }
   };
 
@@ -38,14 +44,24 @@ export const ImagePicker = ({ onChange, value }: Props) => {
     onChange(undefined);
   };
 
+  useEffect(() => {
+    const clearImage = () => {
+      setImage(null);
+    };
+
+    isSuccess && clearImage();
+  }, [isSuccess]);
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {image && (
         <View className="w-full relative">
           <Image source={{ uri: image }} style={{ width: "100%", height: 208, borderRadius: 10 }} />
-          <Pressable className="absolute right-4 top-2" onPress={deleteImage}>
-            <Text className="text-red-500">Usuń</Text>
-          </Pressable>
+          {remove && (
+            <Pressable className="absolute right-4 top-2" onPress={deleteImage}>
+              <Text className="text-red-500">Usuń</Text>
+            </Pressable>
+          )}
         </View>
       )}
       {!image && (

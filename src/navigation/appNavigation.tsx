@@ -1,36 +1,54 @@
-import { CreateProfile, Dashboard, ForgotPassword, SignIn } from "@/screens";
+import { AnimalProfile, CreateProfile, Dashboard, ForgotPassword, SignIn } from "@/screens";
+import { EditAnimalProfile } from "@/screens/EditAnimalProfile";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useAppSelector } from "redux/hooks";
+import { ScreenNames } from "./screenNames";
 const dayjs = require("dayjs");
 require("dayjs/locale/pl");
 dayjs.locale("pl");
 
-type RootStackParamList = {
+// Types
+type UnauthorizedStackParamList = {
   SignIn: undefined;
   ForgotPassword: undefined;
-  Dashboard: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+type AuthorizedStackParamList = {
+  Tabs: undefined;
+  AnimalProfile: { animalData: Animal };
+  EditAnimalProfile: { animalData: Animal };
+};
 
-export type StackProps = NativeStackScreenProps<RootStackParamList, "SignIn" | "ForgotPassword">;
+// Init stacks
+const UnauthorizedStack = createStackNavigator<UnauthorizedStackParamList>();
+const AuthorizedStack = createStackNavigator<AuthorizedStackParamList>();
+const BottomTab = createBottomTabNavigator();
 
-const AuthStack = () => {
+// Global types
+export type UnauthorizedStackProps = NativeStackScreenProps<UnauthorizedStackParamList>;
+export type AuthorizedStackProps = NativeStackScreenProps<
+  AuthorizedStackParamList,
+  "AnimalProfile" | "EditAnimalProfile"
+>;
+
+const Unauthorized = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ headerShown: false }} />
-    </Stack.Navigator>
+    <UnauthorizedStack.Navigator>
+      <UnauthorizedStack.Screen name={ScreenNames.SIGN_IN} component={SignIn} options={{ headerShown: false }} />
+      <UnauthorizedStack.Screen
+        name={ScreenNames.FORGOT_PASSWORD}
+        component={ForgotPassword}
+        options={{ headerShown: false }}
+      />
+    </UnauthorizedStack.Navigator>
   );
 };
 
-const BottomTab = createBottomTabNavigator();
-
-const AppStack = () => {
+const Tabs = () => {
   return (
     <BottomTab.Navigator
       screenOptions={() => ({
@@ -40,7 +58,7 @@ const AppStack = () => {
       })}
     >
       <BottomTab.Screen
-        name="Dashboard"
+        name={ScreenNames.DASHBOARD}
         component={Dashboard}
         options={{
           tabBarLabel: "Podopieczni",
@@ -51,7 +69,7 @@ const AppStack = () => {
         }}
       />
       <BottomTab.Screen
-        name="NewPetForm"
+        name={ScreenNames.ADD_ANIMAL_FORM}
         component={CreateProfile}
         options={{
           tabBarLabel: "Stwórz profil",
@@ -62,7 +80,7 @@ const AppStack = () => {
         }}
       />
       <BottomTab.Screen
-        name="Settings"
+        name={ScreenNames.SETTINGS}
         component={Dashboard}
         options={{
           tabBarLabel: "Ustawienia",
@@ -76,7 +94,25 @@ const AppStack = () => {
   );
 };
 
+const Authorized = () => {
+  return (
+    <AuthorizedStack.Navigator>
+      <AuthorizedStack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
+      <AuthorizedStack.Screen
+        name={ScreenNames.ANIMAL_PROFILE}
+        component={AnimalProfile}
+        options={{ headerShown: false }}
+      />
+      <AuthorizedStack.Screen
+        name={ScreenNames.EDIT_ANIMAL_PROFILE}
+        component={EditAnimalProfile}
+        options={{ title: "Edytuj profil", presentation: "modal", headerStyle: { backgroundColor: "#1f2937" } }}
+      />
+    </AuthorizedStack.Navigator>
+  );
+};
+
 export const AppNavigation = () => {
   const isAuth = useAppSelector((state) => state.userReducer.token);
-  return <NavigationContainer theme={DarkTheme}>{isAuth ? <AppStack /> : <AuthStack />}</NavigationContainer>;
+  return <NavigationContainer theme={DarkTheme}>{isAuth ? <Authorized /> : <Unauthorized />}</NavigationContainer>;
 };

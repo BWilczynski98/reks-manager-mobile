@@ -25,9 +25,9 @@ export const Button = ({ children, onPress, isLoading, variant = "primary" }: Bu
         })}
       >
         {isLoading ? (
-          <ActivityIndicator size="small" />
+          <ActivityIndicator size="small" color="#f9fafb" />
         ) : (
-          <Text className={cn("text-gray-50 text-base text-center")}>{children}</Text>
+          <Text className={cn("text-gray-50 font-medium text-base text-center")}>{children}</Text>
         )}
       </View>
     </TouchableOpacity>

@@ -10,6 +10,7 @@ const injectedRtkApi = api.injectEndpoints({
         method: "GET",
       }),
     }),
+
     postAnimal: build.mutation<AnimalPostResponse, any>({
       query: (body) => ({
         url: "/api/animals/",
@@ -17,8 +18,22 @@ const injectedRtkApi = api.injectEndpoints({
         body: body,
       }),
     }),
+    deleteAnimal: build.mutation<any, string>({
+      query: (slug) => ({
+        url: `/api/animals/${slug}/`,
+        method: "DELETE",
+      }),
+    }),
+    editAnimal: build.mutation<any, { slug: string; body: any }>({
+      query: ({ slug, body }) => ({
+        url: `/api/animals/${slug}/`,
+        method: "PUT",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetAnimalsQuery, usePostAnimalMutation } = injectedRtkApi;
+export const { useGetAnimalsQuery, usePostAnimalMutation, useDeleteAnimalMutation, useEditAnimalMutation } =
+  injectedRtkApi;
 export { injectedRtkApi as animalApi };

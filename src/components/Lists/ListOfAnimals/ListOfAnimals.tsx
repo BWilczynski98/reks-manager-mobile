@@ -13,15 +13,7 @@ export const ListOfAnimals = ({ animals, refreshing, onRefresh }: ListOfAnimalsT
     <View style={{ height: "100%" }}>
       <FlatList
         data={animals}
-        renderItem={({ item }) => (
-          <AnimalTile
-            name={item.name}
-            type={item.animal_type}
-            gender={item.gender}
-            status={item.status}
-            image={item.image}
-          />
-        )}
+        renderItem={({ item }) => <AnimalTile animal={item} />}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
         keyExtractor={(item) => item?.id}
         contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 16 }}

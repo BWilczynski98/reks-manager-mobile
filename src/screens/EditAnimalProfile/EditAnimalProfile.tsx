@@ -1,48 +1,66 @@
 import { Button, Checkbox, Container, DatePicker, Input } from "@/components";
-import { ImagePicker } from "@/components/ImagePicker";
 import { cn } from "@/lib";
+import { AuthorizedStackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import dayjs from "dayjs";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { useGetAnimalsQuery, usePostAnimalMutation } from "redux/services/animal";
-import { FocusAwareStatusBar } from "../Dashboard/components/FocusAwareStatusBar";
-import { AnimalProfileFormData, animalProfileFormSchema } from "./helpers/schema";
-import { ScreenNames } from "@/navigation/screenNames";
+import { useEditAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
+import { type AnimalProfileFormData, animalProfileFormSchema } from "../CreateProfile/helpers/schema";
+import { ImagePicker } from "@/components/ImagePicker";
+// helpers to render checkboxes
+const animalType = [
+  { label: "Kot", value: "KOT" },
+  { label: "Pies", value: "PIES" },
+];
 
-const dayjs = require("dayjs");
+const animalGender = [
+  { label: "Samiec", value: "SAMIEC" },
+  { label: "Samica", value: "SAMICA" },
+];
+const animalResidence = [
+  { label: "Siedziba", value: "SCHRONISKO" },
+  // { label: "Dom tymczasowy", value: "TYMCZASOWY_DOM" },
+];
+const animalStatus = [
+  { label: "Do adopcji", value: "DO_ADOPCJI" },
+  { label: "Adoptowany", value: "ZAADOPTOWANY" },
+  { label: "Nie do adopcji", value: "NIE_DO_ADOPCJI" },
+  { label: "Kwarantanna", value: "KWARANTANNA" },
+];
 
-const initialState = {
-  name: "",
-  animal_type: "KOT",
-  gender: "SAMIEC",
-  breed: "",
-  birth_date: undefined,
-  description: "",
-  status: "DO_ADOPCJI",
-  location_where_found: "",
-  date_when_found: undefined,
-  residence: "SCHRONISKO",
-  temporaryHome: "",
-  description_of_health: "",
-  image: undefined,
-};
+export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
+  const { refetch: refetchAnimals } = useGetAnimalsQuery();
+  const [editingPetProfileData, { isLoading, isSuccess }] = useEditAnimalMutation();
+  const animal = route.params.animalData;
+  const initialState = {
+    name: animal.name,
+    animal_type: animal.animal_type,
+    gender: animal.gender,
+    breed: animal.breed,
+    birth_date: new Date(animal.birth_date) as Date,
+    description: animal.description,
+    status: animal.status,
+    location_where_found: animal.location_where_found,
+    date_when_found: new Date(animal.date_when_found),
+    residence: animal.residence,
+    temporaryHome: animal.home,
+    description_of_health: animal.description_of_health,
+    image: animal.image,
+  };
 
-export const CreateProfile = ({ navigation }: any) => {
-  const { refetch } = useGetAnimalsQuery();
-  const [postAnimal, { isLoading, isSuccess }] = usePostAnimalMutation();
   const {
     control,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<AnimalProfileFormData>({
     resolver: yupResolver(animalProfileFormSchema),
     defaultValues: initialState,
   });
+
   const toast = useToast();
 
   const onSubmit = async (data: AnimalProfileFormData) => {
@@ -59,59 +77,30 @@ export const CreateProfile = ({ navigation }: any) => {
     formData.append("residence", data.residence);
     formData.append("temporary_home", data.temporary_home ? data.temporary_home : "");
     formData.append("description_of_health", data.description_of_health ? data.description_of_health : "");
-    data.image && formData.append("image", data.image);
 
-    await postAnimal(formData)
+    if (data.image !== animal.image) {
+      formData.append("image", data.image);
+    }
+
+    let response: Animal;
+
+    await editingPetProfileData({ slug: animal.slug, body: formData })
       .unwrap()
-      .then(() => {
-        refetch().then(() => {
-          navigation.navigate("Tabs", { screen: ScreenNames.DASHBOARD });
-          toast.show("Utworzono nowy profil", {
-            type: "success",
-            placement: "top",
-          });
-        });
+      .then((res) => {
+        response = res;
       })
       .catch((err) => console.log(err));
-    await refetch();
-
-    resetForm();
+    await refetchAnimals().then(() => {
+      navigation.navigate("AnimalProfile", { animalData: response });
+      toast.show("Profil edytowany", {
+        type: "success",
+        placement: "top",
+      });
+    });
   };
-
-  const resetForm = () => {
-    reset(initialState);
-  };
-
-  // helpers to render checkboxes
-  const animalType = [
-    { label: "Kot", value: "KOT" },
-    { label: "Pies", value: "PIES" },
-  ];
-
-  const animalGender = [
-    { label: "Samiec", value: "SAMIEC" },
-    { label: "Samica", value: "SAMICA" },
-  ];
-  const animalResidence = [
-    { label: "Siedziba", value: "SCHRONISKO" },
-    // { label: "Dom tymczasowy", value: "TYMCZASOWY_DOM" },
-  ];
-  const animalStatus = [
-    { label: "Do adopcji", value: "DO_ADOPCJI" },
-    { label: "Adoptowany", value: "ZAADOPTOWANY" },
-    { label: "Nie do adopcji", value: "NIE_DO_ADOPCJI" },
-    { label: "Kwarantanna", value: "KWARANTANNA" },
-  ];
 
   return (
     <Container>
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor="#1f2937" />
-      <View className="flex-row bg-gray-800 px-4 py-4 items-center justify-between">
-        <Text className="text-gray-50 text-lg font-semibold ">Stwórz nowy profil</Text>
-        <TouchableOpacity activeOpacity={0.75} onPress={resetForm}>
-          <Text className="text-violet-500">Wyczyść</Text>
-        </TouchableOpacity>
-      </View>
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         enableResetScrollToCoords={false}
@@ -124,7 +113,7 @@ export const CreateProfile = ({ navigation }: any) => {
           <Controller
             control={control}
             render={({ field: { onChange, value } }) => (
-              <ImagePicker onChange={onChange} value={value} isSuccess={isSuccess} remove={true} />
+              <ImagePicker onChange={onChange} value={value} isSuccess={isSuccess} />
             )}
             name="image"
           />
@@ -214,7 +203,7 @@ export const CreateProfile = ({ navigation }: any) => {
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <DatePicker
-                value={value ? dayjs(value).format("DD MMMM YYYY") : undefined}
+                value={dayjs(value).format("DD MMMM YYYY") as Date & string}
                 onConfirm={onChange}
                 error={!!errors.birth_date}
                 errorMessage={errors.birth_date?.message}
@@ -265,7 +254,7 @@ export const CreateProfile = ({ navigation }: any) => {
             render={({ field: { onChange, value } }) => (
               <DatePicker
                 label="Data zabezpieczenia *"
-                value={value ? dayjs(value).format("DD MMMM YYYY") : undefined}
+                value={dayjs(value).format("DD MMMM YYYY") as Date & string}
                 onConfirm={(date) => {
                   onChange(date);
                 }}
@@ -380,7 +369,7 @@ export const CreateProfile = ({ navigation }: any) => {
           />
           <View className="my-4">
             <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
-              Stwórz profil
+              Zapisz
             </Button>
           </View>
         </View>
