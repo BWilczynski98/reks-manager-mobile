@@ -6,4 +6,9 @@ export enum ScreenNames {
   SETTINGS = "Settings",
   ANIMAL_PROFILE = "AnimalProfile",
   EDIT_ANIMAL_PROFILE = "EditAnimalProfile",
+  HEALTH_CARD = "HealthCard",
+  ALLERGIES = "Allergies",
+  DRUGS = "Drugs",
+  VACCINATIONS = "Vaccinations",
+  VISITS = "Visits",
 }

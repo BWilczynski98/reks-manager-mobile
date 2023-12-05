@@ -109,7 +109,7 @@ const HealthCardTabs = () => {
       })}
     >
       <BottomTab.Screen
-        name={"Allergies"}
+        name={ScreenNames.ALLERGIES}
         component={Allergies}
         options={{
           tabBarLabel: "Alergie",
@@ -120,7 +120,7 @@ const HealthCardTabs = () => {
         }}
       />
       <BottomTab.Screen
-        name={"Medications"}
+        name={ScreenNames.DRUGS}
         component={Allergies}
         options={{
           tabBarLabel: "Leki",
@@ -131,7 +131,7 @@ const HealthCardTabs = () => {
         }}
       />
       <BottomTab.Screen
-        name={"Vacinations"}
+        name={ScreenNames.VACCINATIONS}
         component={Allergies}
         options={{
           tabBarLabel: "Szczepienia",
@@ -142,7 +142,7 @@ const HealthCardTabs = () => {
         }}
       />
       <BottomTab.Screen
-        name={"VeterinarianVisits"}
+        name={ScreenNames.VISITS}
         component={Allergies}
         options={{
           tabBarLabel: "Wizyty",
