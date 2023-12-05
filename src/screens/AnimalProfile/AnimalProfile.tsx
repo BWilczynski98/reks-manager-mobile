@@ -97,6 +97,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
   const { refetch: refetchAnimals } = useGetAnimalsQuery();
   const animal = route.params.animalData;
+
   const {
     status,
     slug,
@@ -110,8 +111,6 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
     description_of_health,
     location_where_found,
   } = animal;
-  console.log("🚀 ~ file: AnimalProfile.tsx:113 ~ AnimalProfile ~ status:", status);
-  console.log(slug);
 
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const toast = useToast();
@@ -122,6 +121,10 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
 
   const handleOpenEditProfileScreen = () => {
     navigation.navigate(ScreenNames.EDIT_ANIMAL_PROFILE, { animalData: animal });
+  };
+
+  const handleOpenHealthCardScreen = () => {
+    navigation.navigate(ScreenNames.HEALTH_CARD);
   };
 
   const handleOpenModal = () => setModalIsVisible(true);
@@ -245,6 +248,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
             </View>
           </View>
           <View style={{ rowGap: 14 }}>
+            <Button onPress={handleOpenHealthCardScreen}>Karta zdrowia</Button>
             <Button variant="outline" onPress={handleOpenEditProfileScreen}>
               Edytuj
             </Button>
