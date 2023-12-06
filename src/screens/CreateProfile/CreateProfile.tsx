@@ -1,6 +1,7 @@
 import { Button, Checkbox, Container, DatePicker, Input } from "@/components";
 import { ImagePicker } from "@/components/ImagePicker";
 import { cn } from "@/lib";
+import { ScreenNames } from "@/navigation/screenNames";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -11,7 +12,6 @@ import { useToast } from "react-native-toast-notifications";
 import { useGetAnimalsQuery, usePostAnimalMutation } from "redux/services/animal";
 import { FocusAwareStatusBar } from "../Dashboard/components/FocusAwareStatusBar";
 import { AnimalProfileFormData, animalProfileFormSchema } from "./helpers/schema";
-import { ScreenNames } from "@/navigation/screenNames";
 
 const dayjs = require("dayjs");
 
@@ -106,7 +106,7 @@ export const CreateProfile = ({ navigation }: any) => {
   return (
     <Container>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="#1f2937" />
-      <View className="flex-row bg-gray-800 px-4 py-4 items-center justify-between">
+      <View className="flex-row bg-gray-800 px-4 py-[14px] items-center justify-between">
         <Text className="text-gray-50 text-lg font-semibold ">Stwórz nowy profil</Text>
         <TouchableOpacity activeOpacity={0.75} onPress={resetForm}>
           <Text className="text-violet-500">Wyczyść</Text>
