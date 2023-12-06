@@ -1,3 +1,4 @@
+export { Account } from "./Account";
 export { AnimalProfile } from "./AnimalProfile";
 export { CreateProfile } from "./CreateProfile";
 export { Dashboard } from "./Dashboard";
