@@ -42,6 +42,7 @@ type AddedBy = {
 };
 
 type HealthCard = {
+  id: string;
   animal: string;
   allergies: Allergy[];
   medications: Medication[];

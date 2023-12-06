@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { Image, Modal, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import { useDeleteAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
+import { useGetAnimalHealthCardQuery } from "redux/services/healthCard";
 
 type ConfirmationModalProps = {
   modalIsVisible: boolean;
@@ -97,7 +98,9 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
   const { refetch: refetchAnimals } = useGetAnimalsQuery();
   const animal = route.params.animalData;
+  console.log("🚀 ~ file: AnimalProfile.tsx:101 ~ AnimalProfile ~ animal:", animal);
   const {
+    id,
     status,
     slug,
     image,
@@ -110,8 +113,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
     description_of_health,
     location_where_found,
   } = animal;
-  console.log("🚀 ~ file: AnimalProfile.tsx:113 ~ AnimalProfile ~ status:", status);
-  console.log(slug);
+  const { data: healthCard, isSuccess } = useGetAnimalHealthCardQuery(id);
 
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const toast = useToast();
@@ -122,6 +124,13 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
 
   const handleOpenEditProfileScreen = () => {
     navigation.navigate(ScreenNames.EDIT_ANIMAL_PROFILE, { animalData: animal });
+  };
+
+  const handleOpenHealthCardScreen = () => {
+    // Allergies is init screen in health card screen
+    navigation.navigate(ScreenNames.HEALTH_CARD, {
+      screen: ScreenNames.ALLERGIES,
+    });
   };
 
   const handleOpenModal = () => setModalIsVisible(true);
@@ -245,6 +254,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
             </View>
           </View>
           <View style={{ rowGap: 14 }}>
+            {/* <Button onPress={handleOpenHealthCardScreen}>Karta zdrowia</Button> */}
             <Button variant="outline" onPress={handleOpenEditProfileScreen}>
               Edytuj
             </Button>

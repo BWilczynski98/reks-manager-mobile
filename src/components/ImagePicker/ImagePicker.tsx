@@ -26,7 +26,6 @@ export const ImagePicker = ({ onChange, value, isSuccess, remove }: Props) => {
 
     if (!result.canceled) {
       const file = result.assets[0];
-      console.log(file);
       const imageName = file.uri.split("/").pop();
       const imageUri = "file:///" + file.uri.split("file:/").join("");
 

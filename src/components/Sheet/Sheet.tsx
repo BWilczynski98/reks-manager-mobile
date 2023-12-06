@@ -1,12 +1,6 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React, { FC, ReactNode, RefObject, forwardRef, useCallback, useMemo } from "react";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetFooter,
-  BottomSheetFooterProps,
-  BottomSheetModal,
-} from "@gorhom/bottom-sheet";
-import { Button } from "../UI";
+import { BottomSheetBackdrop, BottomSheetFooterProps, BottomSheetModal } from "@gorhom/bottom-sheet";
+import React, { FC, ReactNode, forwardRef, useCallback, useMemo } from "react";
+import { Text, View } from "react-native";
 
 type Props = {
   title?: string;
@@ -36,19 +30,6 @@ const Sheet = forwardRef<Ref, Props>((props, ref) => {
     []
   );
 
-  const renderFooter = useCallback(
-    (props: any) => (
-      <BottomSheetFooter {...props} bottomInset={24}>
-        <View>
-          <TouchableOpacity onPress={props.onReset} activeOpacity={0.75}>
-            <Text className="text-center text-red-500 text-lg">Wyzeruj</Text>
-          </TouchableOpacity>
-        </View>
-      </BottomSheetFooter>
-    ),
-    []
-  );
-
   return (
     <BottomSheetModal
       ref={ref}
@@ -61,6 +42,7 @@ const Sheet = forwardRef<Ref, Props>((props, ref) => {
       handleIndicatorStyle={{ backgroundColor: "#f9fafb" }}
       style={{ paddingHorizontal: 16 }}
       footerComponent={props.footer}
+      keyboardBlurBehavior="restore"
     >
       <View className="mb-3">
         <Text className="text-gray-50 text-xl font-semibold">{props.title}</Text>
