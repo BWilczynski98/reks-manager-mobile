@@ -2,12 +2,13 @@ import { Button, Checkbox } from "@/components";
 import Sheet from "@/components/Sheet/Sheet";
 import { errorsDictionary } from "@/helpers/errors-dictionary";
 import { cn } from "@/lib";
-import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { forwardRef, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { StyleSheet, Text, View, type TextInputProps } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import * as yup from "yup";
+import { SheetInput } from "./SheetInput";
 
 type Ref = BottomSheetModal;
 
@@ -19,34 +20,6 @@ const schema = yup.object().shape({
 });
 type AllergySchemaType = yup.InferType<typeof schema>;
 const initialValues: AllergySchemaType = { category: "", name: "", description: "" };
-
-// Custom input component
-type SheetInputType = {
-  label?: string | undefined;
-  placeholder?: string | undefined;
-  error: boolean;
-  errorMessage?: string | undefined;
-};
-
-type ExtendedSheetInputType = TextInputProps & SheetInputType;
-
-const SheetInput = (props: ExtendedSheetInputType) => {
-  const { label, placeholder, error, errorMessage } = props;
-  const borderRed = { borderColor: "#ef4444" };
-  return (
-    <View className="space-y-4">
-      <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": error })}>{label}</Text>
-      <BottomSheetTextInput
-        {...props}
-        style={[style.inputContainer, error && borderRed, props.style && props.style]}
-        cursorColor={"white"}
-        placeholder={placeholder}
-        placeholderTextColor={"#6b7280"}
-      />
-      {error && <Text className="text-red-500 font-semibold">{errorMessage}</Text>}
-    </View>
-  );
-};
 
 // Helper const for maping categories
 type Category = {
@@ -124,6 +97,7 @@ export const AllergySheetForm = forwardRef<Ref, AllergySheetFormType>((props, re
               error={!!errors.name}
               errorMessage={errors.name?.message}
               label="Alergen *"
+              placeholder="Nazwa substancji, która wywołuje alergię"
               onChangeText={onChange}
               onBlur={onBlur}
               value={value}
@@ -144,6 +118,7 @@ export const AllergySheetForm = forwardRef<Ref, AllergySheetFormType>((props, re
               multiline={true}
               numberOfLines={6}
               style={{ textAlignVertical: "top" }}
+              placeholder="Opisz objawy jakie towarzyszą alergii"
             />
           )}
           name="description"

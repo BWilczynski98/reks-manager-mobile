@@ -1,10 +1,9 @@
 import { Container } from "@/components";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useRef } from "react";
-import { AllergySheetForm } from "./components/AllergySheetForm";
 import { Empty } from "./components/Empty";
 
-export const Allergies = () => {
+export const Visits = () => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const handleOpenSheet = () => bottomSheetRef.current?.present();
   const handleCloseSheet = () => bottomSheetRef.current?.close();
@@ -15,12 +14,11 @@ export const Allergies = () => {
         <></>
       ) : (
         <Empty
-          description="Brak informacji na temat alergii"
-          buttonLabel="Dodaj alergie"
+          description="Brak informacji na temat wizyt weterynaryjnych"
+          buttonLabel="Dodaj wizyte"
           handleOpenSheet={handleOpenSheet}
         />
       )}
-      <AllergySheetForm ref={bottomSheetRef} onClose={handleCloseSheet} />
     </Container>
   );
 };

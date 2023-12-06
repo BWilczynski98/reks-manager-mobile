@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { Image, Modal, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import { useDeleteAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
+import { useGetAnimalHealthCardQuery } from "redux/services/healthCard";
 
 type ConfirmationModalProps = {
   modalIsVisible: boolean;
@@ -97,8 +98,9 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
   const { refetch: refetchAnimals } = useGetAnimalsQuery();
   const animal = route.params.animalData;
-
+  console.log("🚀 ~ file: AnimalProfile.tsx:101 ~ AnimalProfile ~ animal:", animal);
   const {
+    id,
     status,
     slug,
     image,
@@ -111,6 +113,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
     description_of_health,
     location_where_found,
   } = animal;
+  const { data: healthCard, isSuccess } = useGetAnimalHealthCardQuery(id);
 
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const toast = useToast();
@@ -124,7 +127,10 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   };
 
   const handleOpenHealthCardScreen = () => {
-    navigation.navigate(ScreenNames.HEALTH_CARD);
+    // Allergies is init screen in health card screen
+    navigation.navigate(ScreenNames.HEALTH_CARD, {
+      screen: ScreenNames.ALLERGIES,
+    });
   };
 
   const handleOpenModal = () => setModalIsVisible(true);

@@ -1,9 +1,18 @@
-import { AnimalProfile, CreateProfile, Dashboard, ForgotPassword, SignIn } from "@/screens";
+import {
+  Allergies,
+  AnimalProfile,
+  CreateProfile,
+  Dashboard,
+  ForgotPassword,
+  Medication,
+  SignIn,
+  Vaccinations,
+  Visits,
+} from "@/screens";
 import { EditAnimalProfile } from "@/screens/EditAnimalProfile";
-import { Allergies } from "@/screens/HealthCard/Allergies";
 import { Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { DarkTheme, NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, NavigationContainer, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useAppSelector } from "redux/hooks";
@@ -22,7 +31,14 @@ type AuthorizedStackParamList = {
   Tabs: undefined;
   AnimalProfile: { animalData: Animal };
   EditAnimalProfile: { animalData: Animal };
-  HealthCard: undefined;
+  HealthCard: NavigatorScreenParams<HealthCardStackParamList>;
+};
+
+type HealthCardStackParamList = {
+  Allergies: undefined;
+  Medication: undefined;
+  Vaccinations: undefined;
+  Visits: undefined;
 };
 
 // Init stacks
@@ -35,6 +51,10 @@ export type UnauthorizedStackProps = NativeStackScreenProps<UnauthorizedStackPar
 export type AuthorizedStackProps = NativeStackScreenProps<
   AuthorizedStackParamList,
   "AnimalProfile" | "EditAnimalProfile"
+>;
+export type HealthCardStackProps = NativeStackScreenProps<
+  HealthCardStackParamList,
+  ScreenNames.ALLERGIES | ScreenNames.MEDICATION | ScreenNames.VACCINATIONS | ScreenNames.VISITS
 >;
 
 const Unauthorized = () => {
@@ -120,8 +140,8 @@ const HealthCardTabs = () => {
         }}
       />
       <BottomTab.Screen
-        name={ScreenNames.DRUGS}
-        component={Allergies}
+        name={ScreenNames.MEDICATION}
+        component={Medication}
         options={{
           tabBarLabel: "Leki",
           headerShown: false,
@@ -132,7 +152,7 @@ const HealthCardTabs = () => {
       />
       <BottomTab.Screen
         name={ScreenNames.VACCINATIONS}
-        component={Allergies}
+        component={Vaccinations}
         options={{
           tabBarLabel: "Szczepienia",
           headerShown: false,
@@ -143,7 +163,7 @@ const HealthCardTabs = () => {
       />
       <BottomTab.Screen
         name={ScreenNames.VISITS}
-        component={Allergies}
+        component={Visits}
         options={{
           tabBarLabel: "Wizyty",
           headerShown: false,
