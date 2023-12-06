@@ -254,7 +254,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
             </View>
           </View>
           <View style={{ rowGap: 14 }}>
-            <Button onPress={handleOpenHealthCardScreen}>Karta zdrowia</Button>
+            {/* <Button onPress={handleOpenHealthCardScreen}>Karta zdrowia</Button> */}
             <Button variant="outline" onPress={handleOpenEditProfileScreen}>
               Edytuj
             </Button>
