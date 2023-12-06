@@ -1,4 +1,5 @@
 import {
+  Account,
   Allergies,
   AnimalProfile,
   CreateProfile,
@@ -15,8 +16,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, NavigationContainer, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useAppSelector } from "redux/hooks";
+import { Pressable } from "react-native";
+import { useToast } from "react-native-toast-notifications";
+import { logout } from "redux/features/userSlice";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { ScreenNames } from "./screenNames";
+
 const dayjs = require("dayjs");
 require("dayjs/locale/pl");
 dayjs.locale("pl");
@@ -28,10 +33,16 @@ type UnauthorizedStackParamList = {
 };
 
 type AuthorizedStackParamList = {
-  Tabs: undefined;
+  Tabs: NavigatorScreenParams<DashboardTabsStackParamList>;
   AnimalProfile: { animalData: Animal };
   EditAnimalProfile: { animalData: Animal };
   HealthCard: NavigatorScreenParams<HealthCardStackParamList>;
+};
+
+type DashboardTabsStackParamList = {
+  Dashboard: undefined;
+  AddAnnimalForm: undefined;
+  Account: undefined;
 };
 
 type HealthCardStackParamList = {
@@ -71,6 +82,17 @@ const Unauthorized = () => {
 };
 
 const Tabs = () => {
+  const dispatch = useAppDispatch();
+  const toast = useToast();
+
+  const handleLogoutUser = () => {
+    dispatch(logout());
+    toast.show("Pomyślne wylogowano z aplikacji", {
+      type: "success",
+      placement: "top",
+    });
+  };
+
   return (
     <BottomTab.Navigator
       screenOptions={() => ({
@@ -102,14 +124,20 @@ const Tabs = () => {
         }}
       />
       <BottomTab.Screen
-        name={ScreenNames.SETTINGS}
-        component={Dashboard}
+        name={ScreenNames.ACCOUNT}
+        component={Account}
         options={{
-          tabBarLabel: "Ustawienia",
-          headerShown: false,
+          tabBarLabel: "Konto",
+          title: "Ustawienia konta",
+          headerStyle: { backgroundColor: "#1f2937" },
           tabBarIcon: ({ size, color }) => {
-            return <Ionicons name="settings" size={size} color={color} />;
+            return <Ionicons name="person" size={size} color={color} />;
           },
+          headerRight: () => (
+            <Pressable style={{ paddingRight: 24, flexDirection: "row" }} onPress={handleLogoutUser}>
+              <MaterialIcons name="logout" size={24} color={"#f9fafb"} />
+            </Pressable>
+          ),
         }}
       />
     </BottomTab.Navigator>
@@ -201,5 +229,6 @@ const Authorized = () => {
 
 export const AppNavigation = () => {
   const isAuth = useAppSelector((state) => state.userReducer.token);
+
   return <NavigationContainer theme={DarkTheme}>{isAuth ? <Authorized /> : <Unauthorized />}</NavigationContainer>;
 };
