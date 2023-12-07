@@ -3,10 +3,10 @@ import { errorsDictionary } from "@/helpers/errors-dictionary";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { usePasswordChangeMutation } from "redux/services/auth";
+import { useGetUserDataQuery, usePasswordChangeMutation } from "redux/services/auth";
 import * as yup from "yup";
 
 const schema = yup.object().shape({
@@ -50,6 +50,7 @@ export const Account = () => {
     handleSubmit,
     reset,
   } = useForm<NewPasswordSchemaForm>({ resolver: yupResolver(schema), defaultValues: initialValues });
+  const { data: userData, isLoading: loadingUserData } = useGetUserDataQuery();
   const [SendNewPassword, { isLoading }] = usePasswordChangeMutation();
   const toast = useToast();
 
@@ -75,83 +76,91 @@ export const Account = () => {
       });
   };
   return (
-    <KeyboardAwareScrollView
-      enableOnAndroid={true}
-      enableResetScrollToCoords={false}
-      bounces={false}
-      contentInsetAdjustmentBehavior="always"
-      overScrollMode="always"
-      showsVerticalScrollIndicator={true}
-      contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 14 }}
-    >
-      <View className="space-y-6">
-        <View style={{ rowGap: 14 }}>
-          <Header>Imię i nazwisko</Header>
-          <Text className="text-gray-50 text-lg py-2 bg-gray-800 w-56 rounded-lg text-center">
-            Bartłomiej Wilczyński
-          </Text>
+    <>
+      {loadingUserData ? (
+        <View className="h-full w-full items-center justify-center">
+          <ActivityIndicator size={"large"} color={"#8b5cf6"} />
         </View>
+      ) : (
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          enableResetScrollToCoords={false}
+          bounces={false}
+          contentInsetAdjustmentBehavior="always"
+          overScrollMode="always"
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 14 }}
+        >
+          <View className="space-y-6">
+            <View style={{ rowGap: 14 }}>
+              <Header>Imię i nazwisko</Header>
+              <Text className="text-gray-50 text-lg py-2 bg-gray-800 w-56 rounded-lg text-center">
+                {userData?.first_name} {userData?.last_name}
+              </Text>
+            </View>
 
-        <View style={{ rowGap: 14 }}>
-          <Header>Resetowanie hasła</Header>
-          <View style={{ rowGap: 14 }}>
-            <Controller
-              control={control}
-              name="previousPassword"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  label="Stare hasło"
-                  placeholder="Wpisz stare hasło"
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={!!errors.previousPassword}
-                  errorMessage={errors.previousPassword?.message}
+            <View style={{ rowGap: 14 }}>
+              <Header>Resetowanie hasła</Header>
+              <View style={{ rowGap: 14 }}>
+                <Controller
+                  control={control}
+                  name="previousPassword"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      label="Stare hasło"
+                      placeholder="Wpisz stare hasło"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={!!errors.previousPassword}
+                      errorMessage={errors.previousPassword?.message}
+                    />
+                  )}
                 />
-              )}
-            />
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  label="Nowe hasło"
-                  placeholder="Wpisz nowe hasło"
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={!!errors.password}
-                  errorMessage={errors.password?.message}
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      label="Nowe hasło"
+                      placeholder="Wpisz nowe hasło"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={!!errors.password}
+                      errorMessage={errors.password?.message}
+                    />
+                  )}
                 />
-              )}
-            />
-            <Controller
-              control={control}
-              name="confirmPassword"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  label="Powtórz hasło"
-                  placeholder="Powtórz nowe hasło"
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={!!errors.confirmPassword}
-                  errorMessage={errors.confirmPassword?.message}
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      label="Powtórz hasło"
+                      placeholder="Powtórz nowe hasło"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={!!errors.confirmPassword}
+                      errorMessage={errors.confirmPassword?.message}
+                    />
+                  )}
                 />
-              )}
-            />
+              </View>
+              <Button variant="outline" onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
+                Zmień hasło
+              </Button>
+            </View>
           </View>
-          <Button variant="outline" onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
-            Zmień hasło
-          </Button>
-        </View>
-      </View>
-    </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      )}
+    </>
   );
 };

@@ -59,6 +59,12 @@ const injectedRtkApi = api.injectEndpoints({
         body: password,
       }),
     }),
+    getUserData: build.query<UserResponse, void>({
+      query: () => ({
+        url: "/auth/user/",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -67,5 +73,6 @@ export const {
   useLogoutMutation,
   useSendPasswordResetTokenToUserEmailMutation,
   usePasswordChangeMutation,
+  useGetUserDataQuery,
 } = injectedRtkApi;
 export { injectedRtkApi as authApi };
