@@ -1,4 +1,4 @@
-import { Button, Container, Heading, Input } from "@/components";
+import { Button, Container, Input } from "@/components";
 import { UnauthorizedStackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
@@ -57,10 +57,10 @@ export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 40}
       >
-        <View className="flex-1 justify-center">
+        <View className="flex-1 justify-center px-4">
           <View className="space-y-4 py-4">
             <View className="items-center">
-              <Heading fontSize="3xl">Logowanie</Heading>
+              <Text className="text-2xl text-gray-50 font-semibold">Logowanie</Text>
             </View>
             {authorizationIsError ? (
               <View>
