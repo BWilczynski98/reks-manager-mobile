@@ -30,9 +30,7 @@ export const MedicationSheetForm = forwardRef<Ref, MedicationSheetFormType>((pro
   } = useForm<MedicationSchemaType>({ resolver: yupResolver(schema), defaultValues: initialValues });
   const snapPoints = useMemo(() => ["50%"], []);
 
-  const onSubmit = async (data: MedicationSchemaType) => {
-    console.log(data);
-  };
+  const onSubmit = async (data: MedicationSchemaType) => {};
 
   return (
     <Sheet
