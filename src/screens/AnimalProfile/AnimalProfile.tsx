@@ -98,7 +98,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
   const { refetch: refetchAnimals } = useGetAnimalsQuery();
   const animal = route.params.animalData;
-  console.log("🚀 ~ file: AnimalProfile.tsx:101 ~ AnimalProfile ~ animal:", animal);
+
   const {
     id,
     status,

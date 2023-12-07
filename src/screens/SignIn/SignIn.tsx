@@ -1,18 +1,18 @@
 import { Button, Container, Input } from "@/components";
 import { UnauthorizedStackProps } from "@/navigation/appNavigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect, useState } from "react";
+import { AuthContext } from "auth/authContext";
+import React, { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { KeyboardAvoidingView, Platform, Pressable, Text, View } from "react-native";
-import { login } from "redux/features/userSlice";
-import { useAppDispatch } from "redux/hooks";
 import { useSignInMutation } from "redux/services/auth";
 import * as yup from "yup";
 import { userAuthFormSchema } from "./helpers/schema";
 
-type AuthorizationFormData = yup.InferType<typeof userAuthFormSchema>;
+export type AuthorizationFormData = yup.InferType<typeof userAuthFormSchema>;
 
 export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
+  const { signIn: testingSignIn } = useContext(AuthContext);
   const [
     signIn,
     {
@@ -24,7 +24,6 @@ export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
     },
   ] = useSignInMutation();
 
-  const dispatch = useAppDispatch();
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const {
     control,
@@ -41,14 +40,19 @@ export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
   const togglePasswordVisibility = () => setPasswordIsVisible((prev) => !prev);
 
   const onSubmit = async (data: AuthorizationFormData) => {
-    await signIn(data).unwrap();
+    const response = await signIn(data).unwrap();
+
+    if (response.token) {
+      testingSignIn(response.token);
+    }
   };
 
-  useEffect(() => {
-    if (authorizationIsSuccess) {
-      dispatch(login({ token: loginData.token }));
-    }
-  }, [authorizationIsSuccess, authorizationIsError]);
+  // useEffect(() => {
+  //   if (authorizationIsSuccess) {
+  //     dispatch(login({ token: loginData.token }));
+
+  //   }
+  // }, [authorizationIsSuccess, authorizationIsError]);
 
   return (
     <Container>

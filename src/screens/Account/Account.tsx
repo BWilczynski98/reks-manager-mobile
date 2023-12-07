@@ -68,7 +68,6 @@ export const Account = () => {
       })
       .catch((err) => {
         const incorrectPreviousPassword = err && err.data?.old_password[0];
-        console.log(incorrectPreviousPassword);
         toast.show(incorrectPreviousPassword ? incorrectPreviousPassword : "Coś poszło nie tak", {
           type: "danger",
           placement: "top",
