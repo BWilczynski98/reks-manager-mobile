@@ -47,7 +47,6 @@ export const AllergySheetForm = forwardRef<Ref, AllergySheetFormType>((props, re
   });
 
   const onSubmit = async (data: AllergySchemaType) => {
-    console.log(data);
     reset();
   };
 

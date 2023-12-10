@@ -16,11 +16,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, NavigationContainer, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
+import { useContext } from "react";
 import { Pressable } from "react-native";
 import { useToast } from "react-native-toast-notifications";
-import { logout } from "redux/features/userSlice";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { ScreenNames } from "./screenNames";
+import { AuthContext } from "auth/authContext";
 
 const dayjs = require("dayjs");
 require("dayjs/locale/pl");
@@ -84,9 +85,11 @@ const Unauthorized = () => {
 const Tabs = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
+  const { signOut } = useContext(AuthContext);
 
   const handleLogoutUser = () => {
-    dispatch(logout());
+    // dispatch(logout());
+    signOut();
     toast.show("Pomyślne wylogowano z aplikacji", {
       type: "success",
       placement: "top",
@@ -228,7 +231,7 @@ const Authorized = () => {
 };
 
 export const AppNavigation = () => {
-  const isAuth = useAppSelector((state) => state.userReducer.token);
+  const { state } = useContext(AuthContext);
 
-  return <NavigationContainer theme={DarkTheme}>{isAuth ? <Authorized /> : <Unauthorized />}</NavigationContainer>;
+  return <NavigationContainer theme={DarkTheme}>{state.token ? <Authorized /> : <Unauthorized />}</NavigationContainer>;
 };
