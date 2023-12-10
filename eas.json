@@ -14,6 +14,14 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://reks-manager-bhyqs.ondigitalocean.app"
       }
+    },
+    "androidapk": {
+      "android": {
+        "buildType": "apk",
+        "env": {
+          "EXPO_PUBLIC_API_URL": "https://reks-manager-bhyqs.ondigitalocean.app"
+        }
+      }
     }
   },
   "submit": {

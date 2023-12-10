@@ -18,9 +18,6 @@
       "**/*"
     ],
     "ios": {
-      "config": {
-        "usesNonExemptEncryption": false
-      },
       "supportsTablet": true
     },
     "android": {
@@ -38,6 +35,12 @@
       "eas": {
         "projectId": "7d2b3794-cc28-4967-b425-e43d2ebb7e7d"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7d2b3794-cc28-4967-b425-e43d2ebb7e7d"
     }
   }
 }
