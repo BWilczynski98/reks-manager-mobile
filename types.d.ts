@@ -34,6 +34,13 @@ type Animal = {
   health_card: HealthCard;
   created_at: string;
   updated_at: string;
+  size?: string;
+  chip: boolean;
+  neutered: boolean;
+  vaccinated: boolean;
+  dewormed: boolean;
+  character: string;
+  for_who: string;
 };
 
 type AddedBy = {
