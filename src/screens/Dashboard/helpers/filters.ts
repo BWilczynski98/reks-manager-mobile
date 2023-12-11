@@ -25,7 +25,7 @@ const filterAnimalGender: filterConditions = [
 const filterAnimalStatus: filterConditions = [
   { label: "Adoptowany", value: "ZAADOPTOWANY" },
   { label: "Do adopcji", value: "DO_ADOPCJI" },
-  { label: "Nie do adopcji", value: "NIE_DO_ADOPCJI" },
+  { label: "Brak", value: "NIE_DO_ADOPCJI" },
   { label: "Kwarantanna", value: "KWARANTANNA" },
 ];
 

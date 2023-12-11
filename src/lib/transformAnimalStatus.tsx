@@ -18,10 +18,10 @@ export const transformAnimalStatus = (status: string): string => {
       transformedAnimalStatus = "Kwarantanna";
       break;
     case AnimalStatusKey.NOT_FOR_ADOPTION:
-      transformedAnimalStatus = "Nie do adopcji";
+      transformedAnimalStatus = "Brak";
       break;
     default:
-      transformedAnimalStatus = "Nie do adopcji";
+      transformedAnimalStatus = "Brak";
       break;
   }
 
