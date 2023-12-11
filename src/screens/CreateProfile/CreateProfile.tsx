@@ -18,16 +18,15 @@ const dayjs = require("dayjs");
 const initialState = {
   name: "",
   animal_type: "KOT",
+  size: "",
   gender: "SAMIEC",
   breed: "",
   birth_date: undefined,
-  description: "",
-  status: "DO_ADOPCJI",
+  status: "NIE_DO_ADOPCJI",
   location_where_found: "",
   date_when_found: undefined,
   residence: "SCHRONISKO",
   temporaryHome: "",
-  description_of_health: "",
   image: undefined,
 };
 
@@ -39,6 +38,7 @@ export const CreateProfile = ({ navigation }: any) => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<AnimalProfileFormData>({
     resolver: yupResolver(animalProfileFormSchema),
     defaultValues: initialState,
@@ -52,13 +52,12 @@ export const CreateProfile = ({ navigation }: any) => {
     formData.append("gender", data.gender);
     formData.append("breed", data.breed ? data.breed : "");
     formData.append("birth_date", dayjs(data.birth_date).format("YYYY-MM-DD"));
-    formData.append("description", data.description ? data.description : "");
-    formData.append("status", data.status);
+    formData.append("status", data.status as string);
     formData.append("location_where_found", data.location_where_found);
     formData.append("date_when_found", dayjs(data.date_when_found).format("YYYY-MM-DD"));
     formData.append("residence", data.residence);
     formData.append("temporary_home", data.temporary_home ? data.temporary_home : "");
-    formData.append("description_of_health", data.description_of_health ? data.description_of_health : "");
+
     data.image && formData.append("image", data.image);
 
     await postAnimal(formData)
@@ -72,7 +71,12 @@ export const CreateProfile = ({ navigation }: any) => {
           });
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        toast.show("Coś poszło nie tak", {
+          type: "danger",
+          placement: "top",
+        });
+      });
     await refetch();
 
     resetForm();
@@ -88,6 +92,13 @@ export const CreateProfile = ({ navigation }: any) => {
     { label: "Pies", value: "PIES" },
   ];
 
+  const animalSize = [
+    { label: "Mały", value: "small" },
+    { label: "Średni", value: "medium" },
+    { label: "Duży", value: "big" },
+    { label: "B.duży", value: "very big" },
+  ];
+
   const animalGender = [
     { label: "Samiec", value: "SAMIEC" },
     { label: "Samica", value: "SAMICA" },
@@ -95,12 +106,6 @@ export const CreateProfile = ({ navigation }: any) => {
   const animalResidence = [
     { label: "Siedziba", value: "SCHRONISKO" },
     // { label: "Dom tymczasowy", value: "TYMCZASOWY_DOM" },
-  ];
-  const animalStatus = [
-    { label: "Do adopcji", value: "DO_ADOPCJI" },
-    { label: "Adoptowany", value: "ZAADOPTOWANY" },
-    { label: "Nie do adopcji", value: "NIE_DO_ADOPCJI" },
-    { label: "Kwarantanna", value: "KWARANTANNA" },
   ];
 
   return (
@@ -177,6 +182,41 @@ export const CreateProfile = ({ navigation }: any) => {
             }}
             name="animal_type"
           />
+          {watch("animal_type") === "PIES" ? (
+            <Controller
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => {
+                return (
+                  <View className="space-y-4">
+                    <View>
+                      <Text
+                        className={cn("text-gray-50 font-semibold text-base", {
+                          "text-red-500": !!errors.size,
+                        })}
+                      >
+                        Wielkość *
+                      </Text>
+                    </View>
+                    <View>
+                      {animalSize.map((type) => (
+                        <Checkbox
+                          radio={true}
+                          key={type.value}
+                          label={type.label}
+                          value={type.value}
+                          onPress={onChange}
+                          isChecked={type.value === value}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                );
+              }}
+              name="size"
+            />
+          ) : null}
+
           <Controller
             control={control}
             rules={{ required: true }}
@@ -258,7 +298,6 @@ export const CreateProfile = ({ navigation }: any) => {
             )}
             name="location_where_found"
           />
-
           <Controller
             control={control}
             rules={{ required: true }}
@@ -307,76 +346,6 @@ export const CreateProfile = ({ navigation }: any) => {
               );
             }}
             name="residence"
-          />
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => {
-              return (
-                <View className="space-y-4">
-                  <View>
-                    <Text
-                      className={cn("text-gray-50 font-semibold text-base", {
-                        "text-red-500": !!errors.animal_type,
-                      })}
-                    >
-                      Status *
-                    </Text>
-                  </View>
-                  <View>
-                    {animalStatus.map((status) => (
-                      <Checkbox
-                        radio={true}
-                        key={status.value}
-                        label={status.label}
-                        value={status.value}
-                        onPress={onChange}
-                        isChecked={status.value === value}
-                      />
-                    ))}
-                  </View>
-                </View>
-              );
-            }}
-            name="status"
-          />
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Stan zdrowia"
-                placeholder="Krótki opis stanu zdrowia"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                error={!!errors.description_of_health}
-                errorMessage={errors.description_of_health?.message}
-                multiline={true}
-                numberOfLines={8}
-                style={{ textAlignVertical: "top" }}
-              />
-            )}
-            name="description_of_health"
-          />
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Uwagi dodatkowe"
-                placeholder="Krótki opis charakteru, sytuacji odebrania i inne uwagi"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                error={!!errors.description}
-                errorMessage={errors.description?.message}
-                multiline={true}
-                numberOfLines={8}
-                style={{ textAlignVertical: "top" }}
-              />
-            )}
-            name="description"
           />
           <View className="my-4">
             <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>

@@ -4,11 +4,11 @@ import * as yup from "yup";
 export const animalProfileFormSchema = yup.object({
   name: yup.string().required(errorsDictionary.required),
   animal_type: yup.string().required(errorsDictionary.required),
+  size: yup.string().when("animal_type", { is: "PIES", then: (schema) => schema.required(errorsDictionary.required) }),
   gender: yup.string().required(errorsDictionary.required),
   breed: yup.string(),
   birth_date: yup.date().required(errorsDictionary.required).typeError(errorsDictionary.incorrect_date),
-  description: yup.string(),
-  status: yup.string().required(errorsDictionary.required),
+  status: yup.string(),
   location_where_found: yup.string().required(errorsDictionary.required),
   date_when_found: yup
     .date()
@@ -20,7 +20,6 @@ export const animalProfileFormSchema = yup.object({
     is: "DOM_TYMCZASOWY",
     then: (schema) => schema.required(errorsDictionary.required),
   }),
-  description_of_health: yup.string(),
   image: yup.mixed(),
 });
 
