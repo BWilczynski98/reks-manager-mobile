@@ -31,9 +31,21 @@ const injectedRtkApi = api.injectEndpoints({
         body,
       }),
     }),
+    adoptionAnnouncement: build.mutation<any, { slug: string; body: any }>({
+      query: ({ slug, body }) => ({
+        url: `/api/animals/${slug}/`,
+        method: "PATCH",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetAnimalsQuery, usePostAnimalMutation, useDeleteAnimalMutation, useEditAnimalMutation } =
-  injectedRtkApi;
+export const {
+  useGetAnimalsQuery,
+  usePostAnimalMutation,
+  useDeleteAnimalMutation,
+  useEditAnimalMutation,
+  useAdoptionAnnouncementMutation,
+} = injectedRtkApi;
 export { injectedRtkApi as animalApi };

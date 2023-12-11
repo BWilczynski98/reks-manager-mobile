@@ -5,6 +5,7 @@ export enum ScreenNames {
   ADD_ANIMAL_FORM = "AddAnimalForm",
   ACCOUNT = "Account",
   ANIMAL_PROFILE = "AnimalProfile",
+  ADOPTION_ANNOUNCEMENT_FORM = "AdoptionAnnouncementForm",
   EDIT_ANIMAL_PROFILE = "EditAnimalProfile",
   HEALTH_CARD = "HealthCard",
   ALLERGIES = "Allergies",

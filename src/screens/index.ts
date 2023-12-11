@@ -1,4 +1,5 @@
 export { Account } from "./Account";
+export { AdoptionAnnouncementForm } from "./AdoptionAnnouncementForm";
 export { AnimalProfile } from "./AnimalProfile";
 export { CreateProfile } from "./CreateProfile";
 export { Dashboard } from "./Dashboard";

@@ -1,5 +1,6 @@
 import {
   Account,
+  AdoptionAnnouncementForm,
   Allergies,
   AnimalProfile,
   CreateProfile,
@@ -36,6 +37,7 @@ type UnauthorizedStackParamList = {
 type AuthorizedStackParamList = {
   Tabs: NavigatorScreenParams<DashboardTabsStackParamList>;
   AnimalProfile: { animalData: Animal };
+  AdoptionAnnouncementForm: { animalData: Animal };
   EditAnimalProfile: { animalData: Animal };
   HealthCard: NavigatorScreenParams<HealthCardStackParamList>;
 };
@@ -60,9 +62,10 @@ const BottomTab = createBottomTabNavigator();
 
 // Global types
 export type UnauthorizedStackProps = NativeStackScreenProps<UnauthorizedStackParamList>;
+export type RootStackProps = NativeStackScreenProps<DashboardTabsStackParamList>;
 export type AuthorizedStackProps = NativeStackScreenProps<
   AuthorizedStackParamList,
-  "AnimalProfile" | "EditAnimalProfile"
+  "AnimalProfile" | "AdoptionAnnouncementForm" | "EditAnimalProfile"
 >;
 export type HealthCardStackProps = NativeStackScreenProps<
   HealthCardStackParamList,
@@ -215,6 +218,15 @@ const Authorized = () => {
         name={ScreenNames.ANIMAL_PROFILE}
         component={AnimalProfile}
         options={{ headerShown: false }}
+      />
+      <AuthorizedStack.Screen
+        name={ScreenNames.ADOPTION_ANNOUNCEMENT_FORM}
+        component={AdoptionAnnouncementForm}
+        options={{
+          title: "Stwórz ogłoszenie",
+          presentation: "modal",
+          headerStyle: { backgroundColor: "#1f2937" },
+        }}
       />
       <AuthorizedStack.Screen
         name={ScreenNames.EDIT_ANIMAL_PROFILE}
