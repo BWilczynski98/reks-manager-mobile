@@ -37,7 +37,7 @@ type UnauthorizedStackParamList = {
 type AuthorizedStackParamList = {
   Tabs: NavigatorScreenParams<DashboardTabsStackParamList>;
   AnimalProfile: { animalData: Animal };
-  AdoptionAnnouncementForm: undefined;
+  AdoptionAnnouncementForm: { animalData: Animal };
   EditAnimalProfile: { animalData: Animal };
   HealthCard: NavigatorScreenParams<HealthCardStackParamList>;
 };
@@ -62,9 +62,10 @@ const BottomTab = createBottomTabNavigator();
 
 // Global types
 export type UnauthorizedStackProps = NativeStackScreenProps<UnauthorizedStackParamList>;
+export type RootStackProps = NativeStackScreenProps<DashboardTabsStackParamList>;
 export type AuthorizedStackProps = NativeStackScreenProps<
   AuthorizedStackParamList,
-  "AnimalProfile" | "EditAnimalProfile"
+  "AnimalProfile" | "AdoptionAnnouncementForm" | "EditAnimalProfile"
 >;
 export type HealthCardStackProps = NativeStackScreenProps<
   HealthCardStackParamList,

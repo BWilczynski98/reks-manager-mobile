@@ -67,7 +67,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   };
 
   const handleOpenAdoptionAnnouncementFormScreen = () => {
-    navigation.navigate(ScreenNames.ADOPTION_ANNOUNCEMENT_FORM);
+    navigation.navigate(ScreenNames.ADOPTION_ANNOUNCEMENT_FORM, { animalData: animal });
   };
 
   const handleOpenEditProfileScreen = () => {
@@ -177,12 +177,15 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
               <Text className="text-gray-50 font-semibold text-2xl">Zarządzanie</Text>
             </View>
             <View style={{ rowGap: 10 }}>
-              <OperationButton
-                icon={<MaterialIcons name="add" size={24} color="white" />}
-                title="Ogłoś adopcje"
-                onPress={handleOpenAdoptionAnnouncementFormScreen}
-                iconBackgroundColor="bg-green-500"
-              />
+              {status !== "ZAADOPTOWANY" ? (
+                <OperationButton
+                  icon={<MaterialIcons name="add" size={24} color="white" />}
+                  title="Ogłoś adopcje"
+                  onPress={handleOpenAdoptionAnnouncementFormScreen}
+                  iconBackgroundColor="bg-green-500"
+                />
+              ) : null}
+
               <OperationButton
                 icon={<MaterialIcons name="medical-services" size={24} color="white" />}
                 title="Karta zdrowia"
