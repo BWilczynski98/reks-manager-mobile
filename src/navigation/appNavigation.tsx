@@ -1,8 +1,10 @@
 import {
   Account,
   AdoptionAnnouncementForm,
+  AdoptionContractForm,
   Allergies,
   AnimalProfile,
+  CreateAdopterProfile,
   CreateProfile,
   Dashboard,
   ForgotPassword,
@@ -17,12 +19,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, NavigationContainer, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
+import { AuthContext } from "auth/authContext";
 import { useContext } from "react";
 import { Pressable } from "react-native";
 import { useToast } from "react-native-toast-notifications";
-import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { ScreenNames } from "./screenNames";
-import { AuthContext } from "auth/authContext";
 
 const dayjs = require("dayjs");
 require("dayjs/locale/pl");
@@ -38,8 +39,10 @@ type AuthorizedStackParamList = {
   Tabs: NavigatorScreenParams<DashboardTabsStackParamList>;
   AnimalProfile: { animalData: Animal };
   AdoptionAnnouncementForm: { animalData: Animal };
+  AdoptionContractForm: { animalData: Animal };
   EditAnimalProfile: { animalData: Animal };
   HealthCard: NavigatorScreenParams<HealthCardStackParamList>;
+  CreateAdopterProfile: undefined;
 };
 
 type DashboardTabsStackParamList = {
@@ -65,7 +68,10 @@ export type UnauthorizedStackProps = NativeStackScreenProps<UnauthorizedStackPar
 export type RootStackProps = NativeStackScreenProps<DashboardTabsStackParamList>;
 export type AuthorizedStackProps = NativeStackScreenProps<
   AuthorizedStackParamList,
-  "AnimalProfile" | "AdoptionAnnouncementForm" | "EditAnimalProfile"
+  | ScreenNames.ANIMAL_PROFILE
+  | ScreenNames.ADOPTION_ANNOUNCEMENT_FORM
+  | ScreenNames.ADOPTION_CONTRACT_FORM
+  | ScreenNames.EDIT_ANIMAL_PROFILE
 >;
 export type HealthCardStackProps = NativeStackScreenProps<
   HealthCardStackParamList,
@@ -86,12 +92,10 @@ const Unauthorized = () => {
 };
 
 const Tabs = () => {
-  const dispatch = useAppDispatch();
   const toast = useToast();
   const { signOut } = useContext(AuthContext);
 
   const handleLogoutUser = () => {
-    // dispatch(logout());
     signOut();
     toast.show("Pomyślne wylogowano z aplikacji", {
       type: "success",
@@ -223,7 +227,16 @@ const Authorized = () => {
         name={ScreenNames.ADOPTION_ANNOUNCEMENT_FORM}
         component={AdoptionAnnouncementForm}
         options={{
-          title: "Stwórz ogłoszenie",
+          title: "Ogłoszenie adopcyjne",
+          presentation: "modal",
+          headerStyle: { backgroundColor: "#1f2937" },
+        }}
+      />
+      <AuthorizedStack.Screen
+        name={ScreenNames.ADOPTION_CONTRACT_FORM}
+        component={AdoptionContractForm}
+        options={{
+          title: "Uzupełnij dane adoptującego",
           presentation: "modal",
           headerStyle: { backgroundColor: "#1f2937" },
         }}
@@ -237,6 +250,11 @@ const Authorized = () => {
         name={ScreenNames.HEALTH_CARD}
         component={HealthCardTabs}
         options={{ title: "Karta zdrowia", presentation: "modal", headerStyle: { backgroundColor: "#1f2937" } }}
+      />
+      <AuthorizedStack.Screen
+        name={ScreenNames.CREATE_ADOPTER_PROFILE}
+        component={CreateAdopterProfile}
+        options={{ title: "Stwórz profil adoptującego", headerStyle: { backgroundColor: "#1f2937" } }}
       />
     </AuthorizedStack.Navigator>
   );

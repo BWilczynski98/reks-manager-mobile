@@ -9,7 +9,6 @@ type EmptyPropsType = {
 };
 
 export const Empty = ({ handleOpenSheet, description, buttonLabel }: EmptyPropsType) => {
-  console.log("🚀 ~ file: Empty.tsx:12 ~ Empty ~ description:", description);
   return (
     <View style={{ flex: 1, rowGap: 28 }} className="justify-center items-center px-2">
       <Text className="text-gray-300 text-xl font-light text-center">{description}</Text>

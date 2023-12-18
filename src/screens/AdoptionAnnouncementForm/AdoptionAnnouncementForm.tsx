@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Switch, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { useAdoptionAnnouncementMutation, useGetAnimalsQuery } from "redux/services/animal";
+import { useAdoptionAnnouncementMutation, useGetAdoptersQuery, useGetAnimalsQuery } from "redux/services/animal";
 import Success from "./components/Success";
 import { AdoptionAnnouncementFormData, adoptionAnnouncementFormSchema } from "./helpers/schema";
 

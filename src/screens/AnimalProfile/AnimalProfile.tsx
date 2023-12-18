@@ -2,17 +2,16 @@ import { Button } from "@/components";
 import { transformAnimalStatus } from "@/lib";
 import { AuthorizedStackProps } from "@/navigation/appNavigation";
 import { ScreenNames } from "@/navigation/screenNames";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import { useDeleteAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
-import { useGetAnimalHealthCardQuery } from "redux/services/healthCard";
 import { ConfirmationModal } from "./components/ConfirmationModal";
 import { InformationTile } from "./components/InformationTile";
 import OperationButton from "./components/OperationButton";
 
-const transformAnimalGender = (type: AnimalType, gender: AnimalGender): string => {
+const transformAnimalGender = (type: string, gender: string): string => {
   let animalGender = "";
 
   const genderOfDogs = () => {
@@ -32,6 +31,7 @@ const statusTileColor = (status: string): string => {
     case "DO_ADOPCJI":
       return "bg-blue-300/90";
     case "ZAADOPTOWANY":
+    case "ADOPTED":
       return "bg-green-300/90";
     default:
       return "bg-gray-300/90";
@@ -42,22 +42,7 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
   const { refetch: refetchAnimals } = useGetAnimalsQuery();
   const animal = route.params.animalData;
-
-  const {
-    id,
-    status,
-    slug,
-    image,
-    name,
-    gender,
-    animal_type,
-    birth_date,
-    breed,
-    description,
-    description_of_health,
-    location_where_found,
-  } = animal;
-  const { data: healthCard, isSuccess } = useGetAnimalHealthCardQuery(id);
+  const { status, slug, image, name, gender, animal_type, birth_date, breed, location_where_found } = animal;
 
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const toast = useToast();
@@ -72,6 +57,10 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
 
   const handleOpenEditProfileScreen = () => {
     navigation.navigate(ScreenNames.EDIT_ANIMAL_PROFILE, { animalData: animal });
+  };
+
+  const handleOpenAdoptionContractFormScreen = () => {
+    navigation.navigate(ScreenNames.ADOPTION_CONTRACT_FORM, { animalData: animal });
   };
 
   const handleOpenHealthCardScreen = () => {
@@ -177,24 +166,23 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
               <Text className="text-gray-50 font-semibold text-2xl">Zarządzanie</Text>
             </View>
             <View style={{ rowGap: 10 }}>
-              {status !== "ZAADOPTOWANY" ? (
+              {status !== "ZAADOPTOWANY" && status !== "ADOPTED" ? (
                 <OperationButton
-                  icon={<MaterialIcons name="add" size={24} color="white" />}
-                  title="Ogłoś adopcje"
+                  icon={<AntDesign name="notification" size={24} color="white" />}
+                  title="Ogłoszenie adopcyjne"
                   onPress={handleOpenAdoptionAnnouncementFormScreen}
-                  iconBackgroundColor="bg-green-500"
+                  // iconBackgroundColor="bg-green-500"
                 />
               ) : null}
-
-              <OperationButton
+              {/* <OperationButton
                 icon={<MaterialIcons name="medical-services" size={24} color="white" />}
                 title="Karta zdrowia"
                 onPress={handleOpenEditProfileScreen}
-              />
+              /> */}
               <OperationButton
                 icon={<MaterialCommunityIcons name="file-document" size={24} color="white" />}
                 title="Umowa adopcyjna"
-                onPress={handleOpenEditProfileScreen}
+                onPress={handleOpenAdoptionContractFormScreen}
               />
               <OperationButton
                 icon={<MaterialIcons name="edit" size={24} color="white" />}

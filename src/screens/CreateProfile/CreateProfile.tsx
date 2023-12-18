@@ -49,6 +49,7 @@ export const CreateProfile = ({ navigation }: any) => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("animal_type", data.animal_type);
+    formData.append("size", data.size ? data.size : "");
     formData.append("gender", data.gender);
     formData.append("breed", data.breed ? data.breed : "");
     formData.append("birth_date", dayjs(data.birth_date).format("YYYY-MM-DD"));

@@ -18,9 +18,9 @@ type Animal = {
   id: string;
   name: string;
   slug: string;
-  animal_type: AnimalType;
+  animal_type: string;
   breed: string;
-  gender: AnimalGender;
+  gender: string;
   birth_date: string;
   description: string;
   status: string;
@@ -29,18 +29,29 @@ type Animal = {
   description_of_health: string;
   residence: string;
   image: string;
-  home?: string;
+  temporary_home: any;
   added_by: AddedBy;
+  adopted_by?: AdoptedBy;
   health_card: HealthCard;
-  created_at: string;
-  updated_at: string;
-  size?: string;
+  health_card_id: string;
+  size: string;
   chip: boolean;
   neutered: boolean;
   vaccinated: boolean;
   dewormed: boolean;
   character: string;
   for_who: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type Adopter = {
+  id: string;
+  name: string;
+  phone_number: string;
+  address: string;
+  created_at: string;
+  updated_at: string;
 };
 
 type AddedBy = {

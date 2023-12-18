@@ -68,7 +68,9 @@ export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
             </View>
             {authorizationIsError ? (
               <View>
-                <Text className="text-red-500 font-semibold">{authorizationError?.data.message}</Text>
+                <Text className="text-red-500 font-semibold text-center">
+                  {authorizationError ? "Podane dane są nieprawidłowe" : null}
+                </Text>
               </View>
             ) : null}
           </View>

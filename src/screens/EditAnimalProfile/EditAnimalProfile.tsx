@@ -11,10 +11,18 @@ import { useToast } from "react-native-toast-notifications";
 import { useEditAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
 import { type AnimalProfileFormData, animalProfileFormSchema } from "../CreateProfile/helpers/schema";
 import { ImagePicker } from "@/components/ImagePicker";
+
 // helpers to render checkboxes
 const animalType = [
   { label: "Kot", value: "KOT" },
   { label: "Pies", value: "PIES" },
+];
+
+const animalSize = [
+  { label: "Mały", value: "small" },
+  { label: "Średni", value: "medium" },
+  { label: "Duży", value: "big" },
+  { label: "B.duży", value: "very big" },
 ];
 
 const animalGender = [
@@ -25,12 +33,6 @@ const animalResidence = [
   { label: "Siedziba", value: "SCHRONISKO" },
   // { label: "Dom tymczasowy", value: "TYMCZASOWY_DOM" },
 ];
-const animalStatus = [
-  { label: "Do adopcji", value: "DO_ADOPCJI" },
-  { label: "Adoptowany", value: "ZAADOPTOWANY" },
-  { label: "Nie do adopcji", value: "NIE_DO_ADOPCJI" },
-  { label: "Kwarantanna", value: "KWARANTANNA" },
-];
 
 export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
   const { refetch: refetchAnimals } = useGetAnimalsQuery();
@@ -39,16 +41,14 @@ export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) =
   const initialState = {
     name: animal.name,
     animal_type: animal.animal_type,
+    size: animal.size,
     gender: animal.gender,
     breed: animal.breed,
-    birth_date: new Date(animal.birth_date) as Date,
-    description: animal.description,
     status: animal.status,
+    birth_date: new Date(animal.birth_date) as Date,
     location_where_found: animal.location_where_found,
     date_when_found: new Date(animal.date_when_found),
     residence: animal.residence,
-    temporaryHome: animal.home,
-    description_of_health: animal.description_of_health,
     image: animal.image,
   };
 
@@ -56,6 +56,7 @@ export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) =
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<AnimalProfileFormData>({
     resolver: yupResolver(animalProfileFormSchema),
     defaultValues: initialState,
@@ -67,16 +68,14 @@ export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) =
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("animal_type", data.animal_type);
+    formData.append("size", data.size ? data.size : "");
     formData.append("gender", data.gender);
     formData.append("breed", data.breed ? data.breed : "");
+    formData.append("status", data.status as string);
     formData.append("birth_date", dayjs(data.birth_date).format("YYYY-MM-DD"));
-    formData.append("description", data.description ? data.description : "");
-    formData.append("status", data.status);
     formData.append("location_where_found", data.location_where_found);
     formData.append("date_when_found", dayjs(data.date_when_found).format("YYYY-MM-DD"));
     formData.append("residence", data.residence);
-    formData.append("temporary_home", data.temporary_home ? data.temporary_home : "");
-    formData.append("description_of_health", data.description_of_health ? data.description_of_health : "");
 
     if (data.image !== animal.image) {
       formData.append("image", data.image);
@@ -89,7 +88,12 @@ export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) =
       .then((res) => {
         response = res;
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        toast.show("Coś poszło nie tak", {
+          type: "danger",
+          placement: "top",
+        })
+      );
     await refetchAnimals().then(() => {
       navigation.navigate("AnimalProfile", { animalData: response });
       toast.show("Profil edytowany", {
@@ -166,6 +170,40 @@ export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) =
             }}
             name="animal_type"
           />
+          {watch("animal_type") === "PIES" ? (
+            <Controller
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => {
+                return (
+                  <View className="space-y-4">
+                    <View>
+                      <Text
+                        className={cn("text-gray-50 font-semibold text-base", {
+                          "text-red-500": !!errors.size,
+                        })}
+                      >
+                        Wielkość *
+                      </Text>
+                    </View>
+                    <View>
+                      {animalSize.map((type) => (
+                        <Checkbox
+                          radio={true}
+                          key={type.value}
+                          label={type.label}
+                          value={type.value}
+                          onPress={onChange}
+                          isChecked={type.value === value}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                );
+              }}
+              name="size"
+            />
+          ) : null}
           <Controller
             control={control}
             rules={{ required: true }}
@@ -296,76 +334,6 @@ export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) =
               );
             }}
             name="residence"
-          />
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => {
-              return (
-                <View className="space-y-4">
-                  <View>
-                    <Text
-                      className={cn("text-gray-50 font-semibold text-base", {
-                        "text-red-500": !!errors.animal_type,
-                      })}
-                    >
-                      Status *
-                    </Text>
-                  </View>
-                  <View>
-                    {animalStatus.map((status) => (
-                      <Checkbox
-                        radio={true}
-                        key={status.value}
-                        label={status.label}
-                        value={status.value}
-                        onPress={onChange}
-                        isChecked={status.value === value}
-                      />
-                    ))}
-                  </View>
-                </View>
-              );
-            }}
-            name="status"
-          />
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Stan zdrowia"
-                placeholder="Krótki opis stanu zdrowia"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                error={!!errors.description_of_health}
-                errorMessage={errors.description_of_health?.message}
-                multiline={true}
-                numberOfLines={8}
-                style={{ textAlignVertical: "top" }}
-              />
-            )}
-            name="description_of_health"
-          />
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Uwagi dodatkowe"
-                placeholder="Krótki opis charakteru, sytuacji odebrania i inne uwagi"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                error={!!errors.description}
-                errorMessage={errors.description?.message}
-                multiline={true}
-                numberOfLines={8}
-                style={{ textAlignVertical: "top" }}
-              />
-            )}
-            name="description"
           />
           <View className="my-4">
             <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>

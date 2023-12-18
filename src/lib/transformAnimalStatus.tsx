@@ -12,6 +12,7 @@ export const transformAnimalStatus = (status: string): string => {
       transformedAnimalStatus = "Do adopcji";
       break;
     case AnimalStatusKey.ADOPTED:
+    case "ADOPTED":
       transformedAnimalStatus = "Adoptowany";
       break;
     case AnimalStatusKey.QUARANTINE:
