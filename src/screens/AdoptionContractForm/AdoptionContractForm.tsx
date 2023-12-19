@@ -1,22 +1,26 @@
 import { Button, Container } from "@/components";
 import { ListOfAdopters } from "@/components/Lists";
-import { AuthorizedStackProps } from "@/navigation/appNavigation";
 import { ScreenNames } from "@/navigation/screenNames";
+import { AdoptionContractFormStackProps } from "@/navigation/types/NavigationTypes";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { ActivityIndicator, Linking, Pressable, Text, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
-import { useAdoptionContractMutation, useGetAdoptersQuery, useGetAnimalsQuery } from "redux/services/animal";
+import {
+  useAdoptionContractMutation,
+  useGetAdoptersQuery,
+  useGetProfilesOfAllAnimalsQuery,
+} from "redux/services/animal";
 
-export const AdoptionContractForm = ({ navigation, route }: AuthorizedStackProps) => {
+export const AdoptionContractForm = ({ navigation, route }: AdoptionContractFormStackProps) => {
   console.log(route.params.animalData);
   const animal = route.params.animalData;
   const adopter = animal.adopted_by;
   console.log(adopter);
   const toast = useToast();
   const { data: adopters, isLoading } = useGetAdoptersQuery();
-  const { refetch: refetchAnimals } = useGetAnimalsQuery();
+  const { refetch: refetchAnimals } = useGetProfilesOfAllAnimalsQuery();
   const [addAdopterDataToAnimalProfile] = useAdoptionContractMutation();
   const [selectedAdopter, setSelectedAdopter] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);

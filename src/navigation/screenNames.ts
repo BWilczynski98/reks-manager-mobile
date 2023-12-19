@@ -2,7 +2,7 @@ export enum ScreenNames {
   SIGN_IN = "SignIn",
   FORGOT_PASSWORD = "ForgotPassword",
   DASHBOARD = "Dashboard",
-  ADD_ANIMAL_FORM = "AddAnimalForm",
+  ADD_ANIMAL_FORM = "CreateAnimalProfile",
   ACCOUNT = "Account",
   ANIMAL_PROFILE = "AnimalProfile",
   ADOPTION_ANNOUNCEMENT_FORM = "AdoptionAnnouncementForm",

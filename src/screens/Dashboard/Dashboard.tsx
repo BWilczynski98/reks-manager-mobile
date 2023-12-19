@@ -2,13 +2,13 @@ import { ListOfAnimals, SearchBar } from "@/components";
 import { type BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useReducer, useRef, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Platform, StatusBar, View } from "react-native";
-import { useGetAnimalsQuery } from "redux/services/animal";
+import { useGetProfilesOfAllAnimalsQuery } from "redux/services/animal";
 import { FilterSheet } from "./components/FilterSheet";
 import { FocusAwareStatusBar } from "./components/FocusAwareStatusBar";
 import { type FilterState } from "./helpers/filters";
 
 export const Dashboard = () => {
-  const { data: animals, refetch, isLoading } = useGetAnimalsQuery();
+  const { data: animals, refetch, isLoading } = useGetProfilesOfAllAnimalsQuery();
 
   // Bottom sheet properties
   const bottomSheetRef = useRef<BottomSheetModal>(null);

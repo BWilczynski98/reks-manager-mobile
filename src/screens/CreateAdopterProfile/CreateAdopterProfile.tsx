@@ -1,17 +1,17 @@
-import { View, Text } from "react-native";
-import React from "react";
 import { Button, Container, Input } from "@/components";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Controller, useForm } from "react-hook-form";
-import { AdoptionContractFormData, adoptionContractFormSchema } from "./helpers/schema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCreateAdopterMutation, useGetAdoptersQuery } from "redux/services/animal";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Text, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { AuthorizedStackProps } from "@/navigation/appNavigation";
+import { useCreateAdopterProfileMutation, useGetAdoptersQuery } from "redux/services/animal";
+import { AdoptionContractFormData, adoptionContractFormSchema } from "./helpers/schema";
+import { HomeScreenStackProps } from "@/navigation/types/NavigationTypes";
 
-export const CreateAdopterProfile = ({ navigation }: AuthorizedStackProps) => {
+export const CreateAdopterProfile = ({ navigation }: HomeScreenStackProps) => {
   const toast = useToast();
-  const [createAdopterProfile, { isLoading }] = useCreateAdopterMutation();
+  const [createAdopterProfile, { isLoading }] = useCreateAdopterProfileMutation();
   const { refetch: refetchAdopters } = useGetAdoptersQuery();
   // RHF settings
   const initialState: AdoptionContractFormData = {
