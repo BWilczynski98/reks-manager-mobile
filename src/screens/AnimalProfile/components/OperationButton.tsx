@@ -22,7 +22,7 @@ const OperationButton = ({ title, icon, onPress, iconBackgroundColor, disabled }
       >
         <View className="flex-row space-x-4">
           <View className={cn(" items-center justify-center rounded-md p-1", iconBackgroundColor)}>{icon}</View>
-          <Text className="text-gray-50 text-xl font-medium">{title}</Text>
+          <Text className="text-gray-50 text-lg font-medium">{title}</Text>
         </View>
 
         <Ionicons name="chevron-forward" size={24} color="white" />

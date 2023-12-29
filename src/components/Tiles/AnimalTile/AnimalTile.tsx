@@ -72,7 +72,7 @@ export const AnimalTile = ({ animal }: AnimalTileType) => {
               className={cn("text-gray-50 text-xl font-normal", {
                 "text-red-500": status === "KWARANTANNA",
                 "text-blue-500": status === "DO_ADOPCJI",
-                "text-green-500": status === "ZAADOPTOWANY",
+                "text-green-500": status === "ZAADOPTOWANY" || status === "ADOPTED",
               })}
             >
               {transformAnimalStatus(status)}

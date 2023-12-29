@@ -1,4 +1,4 @@
-import { AppNavigation } from "@/navigation/appNavigation";
+import { RootNavigation } from "@/navigation/root";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { AuthProvider } from "auth/authContext";
 import { StatusBar } from "expo-status-bar";
@@ -16,7 +16,7 @@ export default function App() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <BottomSheetModalProvider>
               <ToastProvider offsetTop={NativeStatusBar.currentHeight}>
-                <AppNavigation />
+                <RootNavigation />
               </ToastProvider>
             </BottomSheetModalProvider>
           </GestureHandlerRootView>

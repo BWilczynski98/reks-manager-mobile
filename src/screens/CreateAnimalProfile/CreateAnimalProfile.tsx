@@ -9,7 +9,7 @@ import { Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { useGetAnimalsQuery, usePostAnimalMutation } from "redux/services/animal";
+import { useCreateAnAnimalProfileMutation, useGetProfilesOfAllAnimalsQuery } from "redux/services/animal";
 import { FocusAwareStatusBar } from "../Dashboard/components/FocusAwareStatusBar";
 import { AnimalProfileFormData, animalProfileFormSchema } from "./helpers/schema";
 
@@ -30,9 +30,9 @@ const initialState = {
   image: undefined,
 };
 
-export const CreateProfile = ({ navigation }: any) => {
-  const { refetch } = useGetAnimalsQuery();
-  const [postAnimal, { isLoading, isSuccess }] = usePostAnimalMutation();
+export const CreateAnimalProfile = ({ navigation }: any) => {
+  const { refetch } = useGetProfilesOfAllAnimalsQuery();
+  const [postAnimal, { isLoading, isSuccess }] = useCreateAnAnimalProfileMutation();
   const {
     control,
     handleSubmit,
@@ -49,6 +49,7 @@ export const CreateProfile = ({ navigation }: any) => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("animal_type", data.animal_type);
+    formData.append("size", data.size ? data.size : "");
     formData.append("gender", data.gender);
     formData.append("breed", data.breed ? data.breed : "");
     formData.append("birth_date", dayjs(data.birth_date).format("YYYY-MM-DD"));
@@ -64,7 +65,7 @@ export const CreateProfile = ({ navigation }: any) => {
       .unwrap()
       .then(() => {
         refetch().then(() => {
-          navigation.navigate("Tabs", { screen: ScreenNames.DASHBOARD });
+          navigation.navigate("HomeScreenBottomTab", { screen: ScreenNames.DASHBOARD });
           toast.show("Utworzono nowy profil", {
             type: "success",
             placement: "top",

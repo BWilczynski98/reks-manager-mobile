@@ -4,7 +4,7 @@ import { Modal, Text, View } from "react-native";
 type ConfirmationModalProps = {
   modalIsVisible: boolean;
   closeModal: () => void;
-  profileName: string;
+  profileName: string | undefined;
   isLoading: boolean;
   onConfirm: () => void;
 };

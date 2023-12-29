@@ -1,1 +1,1 @@
-export { AppNavigation } from "./appNavigation";
+export { RootNavigation } from "./root";

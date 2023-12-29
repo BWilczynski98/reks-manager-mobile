@@ -1,5 +1,6 @@
 import { Button, Container, Input } from "@/components";
-import { UnauthorizedStackProps } from "@/navigation/appNavigation";
+
+import { AuthorizationStackProps } from "@/navigation/types/NavigationTypes";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AuthContext } from "auth/authContext";
 import React, { useContext, useState } from "react";
@@ -11,7 +12,7 @@ import { userAuthFormSchema } from "./helpers/schema";
 
 export type AuthorizationFormData = yup.InferType<typeof userAuthFormSchema>;
 
-export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
+export const SignIn = ({ navigation }: AuthorizationStackProps) => {
   const { signIn: testingSignIn } = useContext(AuthContext);
   const [
     signIn,
@@ -68,7 +69,9 @@ export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
             </View>
             {authorizationIsError ? (
               <View>
-                <Text className="text-red-500 font-semibold">{authorizationError?.data.message}</Text>
+                <Text className="text-red-500 font-semibold text-center">
+                  {authorizationError ? "Podane dane są nieprawidłowe" : null}
+                </Text>
               </View>
             ) : null}
           </View>
