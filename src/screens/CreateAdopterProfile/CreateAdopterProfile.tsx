@@ -1,17 +1,17 @@
-import { View, Text } from "react-native";
-import React from "react";
 import { Button, Container, Input } from "@/components";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Controller, useForm } from "react-hook-form";
-import { AdoptionContractFormData, adoptionContractFormSchema } from "./helpers/schema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCreateAdopterMutation, useGetAdoptersQuery } from "redux/services/animal";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Text, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { AuthorizedStackProps } from "@/navigation/appNavigation";
+import { useCreateAdopterProfileMutation, useGetAdoptersQuery } from "redux/services/animal";
+import { AdoptionContractFormData, adoptionContractFormSchema } from "./helpers/schema";
+import { HomeScreenStackProps } from "@/navigation/types/NavigationTypes";
 
-export const CreateAdopterProfile = ({ navigation }: AuthorizedStackProps) => {
+export const CreateAdopterProfile = ({ navigation }: HomeScreenStackProps) => {
   const toast = useToast();
-  const [createAdopterProfile, { isLoading }] = useCreateAdopterMutation();
+  const [createAdopterProfile, { isLoading }] = useCreateAdopterProfileMutation();
   const { refetch: refetchAdopters } = useGetAdoptersQuery();
   // RHF settings
   const initialState: AdoptionContractFormData = {
@@ -31,7 +31,7 @@ export const CreateAdopterProfile = ({ navigation }: AuthorizedStackProps) => {
   });
 
   const onSubmit = async (data: AdoptionContractFormData) => {
-    await createAdopterProfile({ body: data })
+    await createAdopterProfile({ ...data })
       .unwrap()
       .then(() => {
         refetchAdopters();
@@ -39,7 +39,8 @@ export const CreateAdopterProfile = ({ navigation }: AuthorizedStackProps) => {
         navigation.goBack();
         reset();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         toast.show("Coś poszło nie tak", { type: "danger", placement: "top" });
       });
   };

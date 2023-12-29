@@ -1,19 +1,22 @@
 import { Button, Container, Input } from "@/components";
 import { cn } from "@/lib";
-import { AuthorizedStackProps, RootStackProps } from "@/navigation/appNavigation";
 import { ScreenNames } from "@/navigation/screenNames";
+import { AdoptionAnnouncementFormStackProps, HomeScreenBottomTabProps } from "@/navigation/types/NavigationTypes";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Switch, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { useAdoptionAnnouncementMutation, useGetAdoptersQuery, useGetAnimalsQuery } from "redux/services/animal";
+import { useAdoptionAnnouncementMutation, useGetProfilesOfAllAnimalsQuery } from "redux/services/animal";
 import Success from "./components/Success";
 import { AdoptionAnnouncementFormData, adoptionAnnouncementFormSchema } from "./helpers/schema";
 
-export const AdoptionAnnouncementForm = ({ navigation, route }: AuthorizedStackProps & RootStackProps) => {
-  const animal = route.params.animalData;
+export const AdoptionAnnouncementForm = ({
+  navigation,
+  route,
+}: AdoptionAnnouncementFormStackProps & HomeScreenBottomTabProps) => {
+  const animal = route.params?.animalData;
   const toast = useToast();
   // RHF Settings
   const initialState: AdoptionAnnouncementFormData = {
@@ -37,7 +40,7 @@ export const AdoptionAnnouncementForm = ({ navigation, route }: AuthorizedStackP
   });
 
   // RTK Querry
-  const { refetch: refetchAnimals } = useGetAnimalsQuery();
+  const { refetch: refetchAnimals } = useGetProfilesOfAllAnimalsQuery();
   const [editingPetProfileData, { isLoading, isSuccess }] = useAdoptionAnnouncementMutation();
 
   // Submiting adoption post data

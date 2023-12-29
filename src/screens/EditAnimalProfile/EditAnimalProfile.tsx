@@ -1,6 +1,7 @@
 import { Button, Checkbox, Container, DatePicker, Input } from "@/components";
+import { ImagePicker } from "@/components/ImagePicker";
 import { cn } from "@/lib";
-import { AuthorizedStackProps } from "@/navigation/appNavigation";
+import { AuthorizedStackProps } from "@/navigation/root";
 import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs from "dayjs";
 import React from "react";
@@ -8,9 +9,8 @@ import { Controller, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useToast } from "react-native-toast-notifications";
-import { useEditAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
-import { type AnimalProfileFormData, animalProfileFormSchema } from "../CreateProfile/helpers/schema";
-import { ImagePicker } from "@/components/ImagePicker";
+import { useEditAnimalMutation, useGetProfilesOfAllAnimalsQuery } from "redux/services/animal";
+import { animalProfileFormSchema, type AnimalProfileFormData } from "../CreateAnimalProfile/helpers/schema";
 
 // helpers to render checkboxes
 const animalType = [
@@ -35,7 +35,7 @@ const animalResidence = [
 ];
 
 export const EditAnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
-  const { refetch: refetchAnimals } = useGetAnimalsQuery();
+  const { refetch: refetchAnimals } = useGetProfilesOfAllAnimalsQuery();
   const [editingPetProfileData, { isLoading, isSuccess }] = useEditAnimalMutation();
   const animal = route.params.animalData;
   const initialState = {

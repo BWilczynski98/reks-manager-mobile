@@ -1,5 +1,6 @@
 import { Button, Container, Input } from "@/components";
-import { UnauthorizedStackProps } from "@/navigation/appNavigation";
+
+import { AuthorizationStackProps } from "@/navigation/types/NavigationTypes";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AuthContext } from "auth/authContext";
 import React, { useContext, useState } from "react";
@@ -11,7 +12,7 @@ import { userAuthFormSchema } from "./helpers/schema";
 
 export type AuthorizationFormData = yup.InferType<typeof userAuthFormSchema>;
 
-export const SignIn = ({ navigation }: UnauthorizedStackProps) => {
+export const SignIn = ({ navigation }: AuthorizationStackProps) => {
   const { signIn: testingSignIn } = useContext(AuthContext);
   const [
     signIn,

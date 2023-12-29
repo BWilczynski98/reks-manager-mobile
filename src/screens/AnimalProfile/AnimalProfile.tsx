@@ -1,12 +1,12 @@
 import { Button } from "@/components";
 import { transformAnimalStatus } from "@/lib";
-import { AuthorizedStackProps } from "@/navigation/appNavigation";
 import { ScreenNames } from "@/navigation/screenNames";
+import { AnimalProfileStackProps } from "@/navigation/types/NavigationTypes";
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
-import { useDeleteAnimalMutation, useGetAnimalsQuery } from "redux/services/animal";
+import { useDeleteAnimalMutation, useGetProfilesOfAllAnimalsQuery } from "redux/services/animal";
 import { ConfirmationModal } from "./components/ConfirmationModal";
 import { InformationTile } from "./components/InformationTile";
 import OperationButton from "./components/OperationButton";
@@ -38,9 +38,9 @@ const statusTileColor = (status: string): string => {
   }
 };
 
-export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
+export const AnimalProfile = ({ navigation, route }: AnimalProfileStackProps) => {
   const [deleteAnimal, { isLoading }] = useDeleteAnimalMutation();
-  const { refetch: refetchAnimals } = useGetAnimalsQuery();
+  const { refetch: refetchAnimals } = useGetProfilesOfAllAnimalsQuery();
   const animal = route.params.animalData;
   const { status, slug, image, name, gender, animal_type, birth_date, breed, location_where_found } = animal;
 
@@ -61,13 +61,6 @@ export const AnimalProfile = ({ navigation, route }: AuthorizedStackProps) => {
 
   const handleOpenAdoptionContractFormScreen = () => {
     navigation.navigate(ScreenNames.ADOPTION_CONTRACT_FORM, { animalData: animal });
-  };
-
-  const handleOpenHealthCardScreen = () => {
-    // Allergies is init screen in health card screen
-    navigation.navigate(ScreenNames.HEALTH_CARD, {
-      screen: ScreenNames.ALLERGIES,
-    });
   };
 
   const handleOpenModal = () => setModalIsVisible(true);

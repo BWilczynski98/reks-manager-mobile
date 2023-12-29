@@ -1,17 +1,18 @@
+import { AnyIfEmpty } from "react-redux";
 import { emptySplitApi as api } from "redux/emptyApi";
+import { AdopterProfileBody, AdopterProfileResponse } from "redux/types/queryTypes";
 
 type AnimalPostResponse = Animal;
 
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
-    getAnimals: build.query<Animals, void>({
+    getProfilesOfAllAnimals: build.query<Animals, void>({
       query: () => ({
         url: "/api/animals/",
         method: "GET",
       }),
     }),
-
-    postAnimal: build.mutation<AnimalPostResponse, any>({
+    createAnAnimalProfile: build.mutation<AnimalPostResponse, any>({
       query: (body) => ({
         url: "/api/animals/",
         method: "POST",
@@ -38,14 +39,37 @@ const injectedRtkApi = api.injectEndpoints({
         body,
       }),
     }),
+    adoptionContract: build.mutation<Animal, { slug: string; adopted_by: string }>({
+      query: ({ slug, adopted_by }) => ({
+        url: `/api/animals/${slug}/`,
+        method: "PATCH",
+        body: { adopted_by },
+      }),
+    }),
+    getAdopters: build.query<Adopter[], void>({
+      query: () => ({
+        url: "/api/adopter/",
+        method: "GET",
+      }),
+    }),
+    createAdopterProfile: build.mutation<AdopterProfileResponse, AdopterProfileBody>({
+      query: (body) => ({
+        url: "/api/adopter/",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
 export const {
-  useGetAnimalsQuery,
-  usePostAnimalMutation,
+  useGetProfilesOfAllAnimalsQuery,
+  useCreateAnAnimalProfileMutation,
   useDeleteAnimalMutation,
   useEditAnimalMutation,
   useAdoptionAnnouncementMutation,
+  useAdoptionContractMutation,
+  useGetAdoptersQuery,
+  useCreateAdopterProfileMutation,
 } = injectedRtkApi;
 export { injectedRtkApi as animalApi };

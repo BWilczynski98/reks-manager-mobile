@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { AdopterTile } from "@/components/Tiles";
 
 type ListOfAdoptersPropsType = {
-  adopters: Adopter[];
+  adopters: Adopter[] | undefined;
   onSelect: (id: string) => void;
   selectedAdopterId: string | null;
 };

@@ -5,11 +5,9 @@ import {
   Allergies,
   AnimalProfile,
   CreateAdopterProfile,
-  CreateProfile,
+  CreateAnimalProfile,
   Dashboard,
-  ForgotPassword,
   Medication,
-  SignIn,
   Vaccinations,
   Visits,
 } from "@/screens";
@@ -23,7 +21,9 @@ import { AuthContext } from "auth/authContext";
 import { useContext } from "react";
 import { Pressable } from "react-native";
 import { useToast } from "react-native-toast-notifications";
+import { Authorization } from "./navigators/Authorization";
 import { ScreenNames } from "./screenNames";
+import { HomeScreen } from "./navigators/HomeScreen";
 
 const dayjs = require("dayjs");
 require("dayjs/locale/pl");
@@ -64,7 +64,6 @@ const AuthorizedStack = createStackNavigator<AuthorizedStackParamList>();
 const BottomTab = createBottomTabNavigator();
 
 // Global types
-export type UnauthorizedStackProps = NativeStackScreenProps<UnauthorizedStackParamList>;
 export type RootStackProps = NativeStackScreenProps<DashboardTabsStackParamList>;
 export type AuthorizedStackProps = NativeStackScreenProps<
   AuthorizedStackParamList,
@@ -78,82 +77,7 @@ export type HealthCardStackProps = NativeStackScreenProps<
   ScreenNames.ALLERGIES | ScreenNames.MEDICATION | ScreenNames.VACCINATIONS | ScreenNames.VISITS
 >;
 
-const Unauthorized = () => {
-  return (
-    <UnauthorizedStack.Navigator>
-      <UnauthorizedStack.Screen name={ScreenNames.SIGN_IN} component={SignIn} options={{ headerShown: false }} />
-      <UnauthorizedStack.Screen
-        name={ScreenNames.FORGOT_PASSWORD}
-        component={ForgotPassword}
-        options={{ headerShown: false }}
-      />
-    </UnauthorizedStack.Navigator>
-  );
-};
-
-const Tabs = () => {
-  const toast = useToast();
-  const { signOut } = useContext(AuthContext);
-
-  const handleLogoutUser = () => {
-    signOut();
-    toast.show("Pomyślne wylogowano z aplikacji", {
-      type: "success",
-      placement: "top",
-    });
-  };
-
-  return (
-    <BottomTab.Navigator
-      screenOptions={() => ({
-        tabBarStyle: { backgroundColor: "#030712" },
-        tabBarActiveTintColor: "#f9fafb",
-        tabBarInactiveTintColor: "#374151",
-      })}
-    >
-      <BottomTab.Screen
-        name={ScreenNames.DASHBOARD}
-        component={Dashboard}
-        options={{
-          tabBarLabel: "Podopieczni",
-          headerShown: false,
-          tabBarIcon: ({ size, color }) => {
-            return <MaterialIcons name="pets" size={size} color={color} />;
-          },
-        }}
-      />
-      <BottomTab.Screen
-        name={ScreenNames.ADD_ANIMAL_FORM}
-        component={CreateProfile}
-        options={{
-          tabBarLabel: "Stwórz profil",
-          headerShown: false,
-          tabBarIcon: ({ size, color }) => {
-            return <Ionicons name="add-circle" size={size} color={color} />;
-          },
-        }}
-      />
-      <BottomTab.Screen
-        name={ScreenNames.ACCOUNT}
-        component={Account}
-        options={{
-          tabBarLabel: "Konto",
-          title: "Ustawienia konta",
-          headerStyle: { backgroundColor: "#1f2937" },
-          tabBarIcon: ({ size, color }) => {
-            return <Ionicons name="person" size={size} color={color} />;
-          },
-          headerRight: () => (
-            <Pressable style={{ paddingRight: 24, flexDirection: "row" }} onPress={handleLogoutUser}>
-              <MaterialIcons name="logout" size={24} color={"#f9fafb"} />
-            </Pressable>
-          ),
-        }}
-      />
-    </BottomTab.Navigator>
-  );
-};
-
+// Karta zdrowia
 const HealthCardTabs = () => {
   return (
     <BottomTab.Navigator
@@ -214,54 +138,10 @@ const HealthCardTabs = () => {
   );
 };
 
-const Authorized = () => {
-  return (
-    <AuthorizedStack.Navigator>
-      <AuthorizedStack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
-      <AuthorizedStack.Screen
-        name={ScreenNames.ANIMAL_PROFILE}
-        component={AnimalProfile}
-        options={{ headerShown: false }}
-      />
-      <AuthorizedStack.Screen
-        name={ScreenNames.ADOPTION_ANNOUNCEMENT_FORM}
-        component={AdoptionAnnouncementForm}
-        options={{
-          title: "Ogłoszenie adopcyjne",
-          presentation: "modal",
-          headerStyle: { backgroundColor: "#1f2937" },
-        }}
-      />
-      <AuthorizedStack.Screen
-        name={ScreenNames.ADOPTION_CONTRACT_FORM}
-        component={AdoptionContractForm}
-        options={{
-          title: "Uzupełnij dane adoptującego",
-          presentation: "modal",
-          headerStyle: { backgroundColor: "#1f2937" },
-        }}
-      />
-      <AuthorizedStack.Screen
-        name={ScreenNames.EDIT_ANIMAL_PROFILE}
-        component={EditAnimalProfile}
-        options={{ title: "Edytuj profil", presentation: "modal", headerStyle: { backgroundColor: "#1f2937" } }}
-      />
-      <AuthorizedStack.Screen
-        name={ScreenNames.HEALTH_CARD}
-        component={HealthCardTabs}
-        options={{ title: "Karta zdrowia", presentation: "modal", headerStyle: { backgroundColor: "#1f2937" } }}
-      />
-      <AuthorizedStack.Screen
-        name={ScreenNames.CREATE_ADOPTER_PROFILE}
-        component={CreateAdopterProfile}
-        options={{ title: "Stwórz profil adoptującego", headerStyle: { backgroundColor: "#1f2937" } }}
-      />
-    </AuthorizedStack.Navigator>
-  );
-};
-
-export const AppNavigation = () => {
+export const RootNavigation = () => {
   const { state } = useContext(AuthContext);
 
-  return <NavigationContainer theme={DarkTheme}>{state.token ? <Authorized /> : <Unauthorized />}</NavigationContainer>;
+  return (
+    <NavigationContainer theme={DarkTheme}>{state.token ? <HomeScreen /> : <Authorization />}</NavigationContainer>
+  );
 };
