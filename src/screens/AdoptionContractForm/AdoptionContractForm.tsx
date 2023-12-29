@@ -14,12 +14,11 @@ import {
 } from "redux/services/animal";
 
 export const AdoptionContractForm = ({ navigation, route }: AdoptionContractFormStackProps) => {
-  console.log(route.params.animalData);
   const animal = route.params.animalData;
   const adopter = animal.adopted_by;
-  console.log(adopter);
   const toast = useToast();
   const { data: adopters, isLoading } = useGetAdoptersQuery();
+  console.log(adopters);
   const { refetch: refetchAnimals } = useGetProfilesOfAllAnimalsQuery();
   const [addAdopterDataToAnimalProfile] = useAdoptionContractMutation();
   const [selectedAdopter, setSelectedAdopter] = useState<string | null>(null);
@@ -36,11 +35,10 @@ export const AdoptionContractForm = ({ navigation, route }: AdoptionContractForm
       let response: Animal;
       await addAdopterDataToAnimalProfile({
         slug: animal.slug,
-        body: { adopted_by: selectedAdopter, status: "ZAADOPTOWANY" },
+        adopted_by: selectedAdopter,
       })
         .unwrap()
         .then((res) => {
-          console.log(`response: `, res);
           response = res;
         })
         .catch((err) => {

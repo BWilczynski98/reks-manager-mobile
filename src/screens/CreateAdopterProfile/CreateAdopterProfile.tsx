@@ -31,7 +31,7 @@ export const CreateAdopterProfile = ({ navigation }: HomeScreenStackProps) => {
   });
 
   const onSubmit = async (data: AdoptionContractFormData) => {
-    await createAdopterProfile({ body: data })
+    await createAdopterProfile({ ...data })
       .unwrap()
       .then(() => {
         refetchAdopters();
@@ -39,7 +39,8 @@ export const CreateAdopterProfile = ({ navigation }: HomeScreenStackProps) => {
         navigation.goBack();
         reset();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         toast.show("Coś poszło nie tak", { type: "danger", placement: "top" });
       });
   };

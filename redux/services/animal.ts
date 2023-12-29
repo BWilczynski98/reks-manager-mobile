@@ -39,26 +39,14 @@ const injectedRtkApi = api.injectEndpoints({
         body,
       }),
     }),
-    adoptionContract: build.mutation<
-      { name: string; phone_number: string; address: string; created_at: Date; updated_at: Date },
-      { name: string; phone_number: string; address: string }
-    >({
-      query: (body) => ({
-        url: `/api/adopter/`,
-        method: "POST",
-        body,
+    adoptionContract: build.mutation<Animal, { slug: string; adopted_by: string }>({
+      query: ({ slug, adopted_by }) => ({
+        url: `/api/animals/${slug}/`,
+        method: "PATCH",
+        body: { adopted_by },
       }),
     }),
-    getAdopters: build.query<
-      {
-        name: string;
-        phone_number: string;
-        address: string;
-        created_at: Date;
-        updated_at: Date;
-      },
-      void
-    >({
+    getAdopters: build.query<Adopter[], void>({
       query: () => ({
         url: "/api/adopter/",
         method: "GET",
