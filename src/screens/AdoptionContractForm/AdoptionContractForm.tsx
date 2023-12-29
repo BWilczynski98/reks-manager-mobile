@@ -1,7 +1,7 @@
 import { Button, Container } from "@/components";
 import { ListOfAdopters } from "@/components/Lists";
 import { ScreenNames } from "@/navigation/screenNames";
-import { AdoptionContractFormStackProps } from "@/navigation/types/NavigationTypes";
+import { AdoptionContractFormStackProps, HomeScreenBottomTabProps } from "@/navigation/types/NavigationTypes";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -13,12 +13,14 @@ import {
   useGetProfilesOfAllAnimalsQuery,
 } from "redux/services/animal";
 
-export const AdoptionContractForm = ({ navigation, route }: AdoptionContractFormStackProps) => {
+export const AdoptionContractForm = ({
+  navigation,
+  route,
+}: AdoptionContractFormStackProps & HomeScreenBottomTabProps) => {
   const animal = route.params.animalData;
   const adopter = animal.adopted_by;
   const toast = useToast();
   const { data: adopters, isLoading } = useGetAdoptersQuery();
-  console.log(adopters);
   const { refetch: refetchAnimals } = useGetProfilesOfAllAnimalsQuery();
   const [addAdopterDataToAnimalProfile] = useAdoptionContractMutation();
   const [selectedAdopter, setSelectedAdopter] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export const AdoptionContractForm = ({ navigation, route }: AdoptionContractForm
         });
 
       await refetchAnimals().then(() => {
-        navigation.navigate("AnimalProfile", { animalData: response });
+        navigation.navigate(ScreenNames.DASHBOARD);
         toast.show(`Dane adoptującego zostały przypisane do profilu ${animal.name}`, {
           type: "success",
           placement: "top",
@@ -66,18 +68,21 @@ export const AdoptionContractForm = ({ navigation, route }: AdoptionContractForm
       ) : !!adopter ? (
         <View className="px-2 justify-between h-full py-4">
           <View>
-            <View>
-              <Text className="text-gray-50 text-xl">{adopter?.name}</Text>
-              <Text className="text-gray-50 text-lg">{adopter?.address}</Text>
-              <Text className="text-gray-50 text-lg">
-                Data adopcji: {dayjs(adopter.updated_at).format("DD MMMM YYYY")}
-              </Text>
+            <View className="space-y-4">
+              <View className="space-y-1">
+                <Text className="text-gray-300 text-xl">Imię i nazwisko</Text>
+                <Text className="text-gray-50 text-xl">{adopter?.name}</Text>
+              </View>
+              <View className="space-y-1">
+                <Text className="text-gray-300 text-xl">Adres</Text>
+                <Text className="text-gray-50 text-xl">{adopter?.address}</Text>
+              </View>
+              <View className="space-y-1">
+                <Text className="text-gray-300 text-xl">Data adopcji</Text>
+                <Text className="text-gray-50 text-xl">{dayjs(adopter.updated_at).format("DD MMMM YYYY")}</Text>
+              </View>
             </View>
-            <View className="justify-center items-center my-6">
-              <Pressable>
-                <Text className="text-red-500 text-lg font-semibold">Usuń umowe adopcyjną</Text>
-              </Pressable>
-            </View>
+            <View className="justify-center items-center my-6"></View>
           </View>
 
           <View>
@@ -85,10 +90,9 @@ export const AdoptionContractForm = ({ navigation, route }: AdoptionContractForm
               className="justify-center items-center"
               onPress={() => Linking.openURL(`tel:${adopter?.phone_number}`)}
             >
-              <View className="bg-green-500 w-16 h-16 items-center justify-center rounded-full">
-                <View>
-                  <Ionicons name="call" size={24} color="white" />
-                </View>
+              <View className="bg-green-500 px-2 h-10 rounded-lg w-full flex-row items-center justify-center space-x-2">
+                <Ionicons name="call" size={24} color="white" />
+                <Text className="text-gray-50">Zadzwoń</Text>
               </View>
             </Pressable>
           </View>

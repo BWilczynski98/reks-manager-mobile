@@ -17,7 +17,7 @@ export const Button = ({ children, onPress, isLoading, variant = "primary", disa
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress} disabled={disabled}>
       <View
-        className={cn("bg-violet-700 rounded-lg h-10 justify-center items-center", {
+        className={cn("bg-violet-700 rounded-lg h-10 justify-center items-center px-2", {
           "bg-gray-800": outline,
           border: outline,
           "border-gray-800": outline,
