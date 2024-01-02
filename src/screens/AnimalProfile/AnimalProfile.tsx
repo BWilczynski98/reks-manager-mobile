@@ -1,4 +1,4 @@
-import { Button } from "@/components";
+import { Button, ConfirmationModal } from "@/components";
 import { transformAnimalStatus } from "@/lib";
 import { ScreenNames } from "@/navigation/screenNames";
 import { AnimalProfileStackProps } from "@/navigation/types/NavigationTypes";
@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import { useDeleteAnimalMutation, useGetProfilesOfAllAnimalsQuery } from "redux/services/animal";
-import { ConfirmationModal } from "./components/ConfirmationModal";
+
 import { InformationTile } from "./components/InformationTile";
 import OperationButton from "./components/OperationButton";
 
@@ -88,9 +88,10 @@ export const AnimalProfile = ({ navigation, route }: AnimalProfileStackProps) =>
       <ConfirmationModal
         modalIsVisible={modalIsVisible}
         closeModal={handleCloseModal}
-        profileName={name}
         isLoading={isLoading}
         onConfirm={handleDeleteAnimalProfile}
+        title="Potwierdź usuwanie profilu"
+        content={`Czy na pewno chcesz usunąć profil zwierzęcia o imieniu ${name}`}
       />
       <View>
         {/* Navigation */}

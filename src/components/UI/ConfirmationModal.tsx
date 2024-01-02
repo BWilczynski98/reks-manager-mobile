@@ -4,17 +4,19 @@ import { Modal, Text, View } from "react-native";
 type ConfirmationModalProps = {
   modalIsVisible: boolean;
   closeModal: () => void;
-  profileName: string | undefined;
   isLoading: boolean;
   onConfirm: () => void;
+  title: string;
+  content: string;
 };
 
 export const ConfirmationModal = ({
   modalIsVisible,
   closeModal,
-  profileName,
   isLoading,
   onConfirm,
+  title,
+  content,
 }: ConfirmationModalProps) => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -46,13 +48,10 @@ export const ConfirmationModal = ({
             }}
           >
             <View>
-              <Text className="text-gray-50 text-2xl font-semibold">Potwierdź usuwanie profilu</Text>
+              <Text className="text-gray-50 text-2xl font-semibold">{title}</Text>
             </View>
             <View>
-              <Text className="text-gray-300 text-xl tracking-wide">
-                Czy na pewno chcesz usunąć profil zwierzęcia o imieniu{" "}
-                <Text className="font-semibold">{profileName}?</Text>
-              </Text>
+              <Text className="text-gray-300 text-xl tracking-wide">{content}</Text>
             </View>
             <View className="flex-row justify-end space-x-3">
               <View className="w-1/3">
@@ -62,7 +61,7 @@ export const ConfirmationModal = ({
               </View>
               <View className="w-1/3">
                 <Button variant="destructive" onPress={onConfirm} isLoading={isLoading}>
-                  Usuń profil
+                  Usuń
                 </Button>
               </View>
             </View>
