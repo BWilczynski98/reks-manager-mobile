@@ -1,14 +1,15 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreenBottomTab } from "./HomeScreenBottomTab";
-import { ScreenNames } from "../screenNames";
 import {
   AdoptionAnnouncementForm,
   AdoptionContractForm,
   AnimalProfile,
   CreateAdopterProfile,
   EditAnimalProfile,
+  HealthCard,
 } from "@/screens";
+import { createStackNavigator } from "@react-navigation/stack";
+import { ScreenNames } from "../screenNames";
 import { HomeScreenStackType } from "../types/NavigationTypes";
+import { HomeScreenBottomTab } from "./HomeScreenBottomTab";
 
 const Stack = createStackNavigator<HomeScreenStackType>();
 
@@ -22,6 +23,15 @@ export const HomeScreen = () => {
         component={AdoptionAnnouncementForm}
         options={{
           title: "Ogłoszenie adopcyjne",
+          presentation: "modal",
+          headerStyle: { backgroundColor: "#1f2937" },
+        }}
+      />
+      <Stack.Screen
+        name={"HealthCard"}
+        component={HealthCard}
+        options={{
+          title: "Karta zdrowia",
           presentation: "modal",
           headerStyle: { backgroundColor: "#1f2937" },
         }}

@@ -7,7 +7,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 type DatePickerPropsType = {
   error?: boolean;
   errorMessage?: string;
-  value: Date;
+  value: Date | string;
   onConfirm: (date: Date) => void;
   minimumDate?: string | number | Date;
   maximumDate?: string;
@@ -48,7 +48,7 @@ export const DatePicker = ({
       <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": error })}>{label}</Text>
       <View className="rounded-lg overflow-hidden">
         <Pressable
-          className={cn("w-full border-2 border-gray-800 rounded-lg px-4 py-2  flex-row justify-between", {
+          className={cn("w-full border-2 border-gray-700 rounded-lg px-4 py-2  flex-row justify-between", {
             "border-red-500": error,
           })}
           android_ripple={{ color: "#1f2937", foreground: false }}

@@ -19,6 +19,7 @@ export type HomeScreenStackType = {
   CreateAdopterProfile: undefined;
   HomeScreenBottomTab: BottomTabScreenProps<HomeScreenBottomTabType>;
   AnimalProfile: { animalData: Animal };
+  HealthCard: { id: string };
   AdoptionAnnouncementForm: { animalData: Animal };
   AdoptionContractForm: { animalData: Animal };
   EditAnimalProfile: { animalData: Animal };
@@ -36,6 +37,7 @@ export type AdoptionAnnouncementFormStackProps = NativeStackScreenProps<
   HomeScreenStackType,
   ScreenNames.ADOPTION_ANNOUNCEMENT_FORM
 >;
+export type HealthCardStackProps = NativeStackScreenProps<HomeScreenStackType, ScreenNames.HEALTH_CARD>;
 export type AdoptionContractFormStackProps = NativeStackScreenProps<
   HomeScreenStackType,
   ScreenNames.ADOPTION_CONTRACT_FORM

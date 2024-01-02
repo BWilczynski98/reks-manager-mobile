@@ -7,5 +7,5 @@ export { CreateAnimalProfile } from "./CreateAnimalProfile";
 export { Dashboard } from "./Dashboard";
 export { EditAnimalProfile } from "./EditAnimalProfile";
 export { ForgotPassword } from "./ForgotPassword";
-export { Allergies, Medication, Vaccinations, Visits } from "./HealthCard";
+export { HealthCard } from "./HealthCard";
 export { SignIn } from "./SignIn";

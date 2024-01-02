@@ -55,6 +55,10 @@ export const AnimalProfile = ({ navigation, route }: AnimalProfileStackProps) =>
     navigation.navigate(ScreenNames.ADOPTION_ANNOUNCEMENT_FORM, { animalData: animal });
   };
 
+  const handleOpenHealthCard = () => {
+    navigation.navigate(ScreenNames.HEALTH_CARD, { id: animal.health_card.animal });
+  };
+
   const handleOpenEditProfileScreen = () => {
     navigation.navigate(ScreenNames.EDIT_ANIMAL_PROFILE, { animalData: animal });
   };
@@ -168,11 +172,11 @@ export const AnimalProfile = ({ navigation, route }: AnimalProfileStackProps) =>
                   // iconBackgroundColor="bg-green-500"
                 />
               ) : null}
-              {/* <OperationButton
+              <OperationButton
                 icon={<MaterialIcons name="medical-services" size={24} color="white" />}
                 title="Karta zdrowia"
-                onPress={handleOpenEditProfileScreen}
-              /> */}
+                onPress={handleOpenHealthCard}
+              />
               <OperationButton
                 icon={<MaterialCommunityIcons name="file-document" size={24} color="white" />}
                 title="Umowa adopcyjna"
