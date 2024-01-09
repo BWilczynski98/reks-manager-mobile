@@ -7,9 +7,9 @@ import React, { useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import { useDeleteAnimalMutation, useGetProfilesOfAllAnimalsQuery } from "redux/services/animal";
-
 import { InformationTile } from "./components/InformationTile";
 import OperationButton from "./components/OperationButton";
+import { Link } from "@/components/UI/Link";
 
 const transformAnimalGender = (type: string, gender: string): string => {
   let animalGender = "";
@@ -157,6 +157,9 @@ export const AnimalProfile = ({ navigation, route }: AnimalProfileStackProps) =>
               description={transformAnimalStatus(status)}
               color={statusTileColor(status)}
             />
+            {status === "DO_ADOPCJI" && (
+              <Link url={`https://www.reks-malbork.pl/zwierze/${slug}`}>Zobacz ogłoszenie adopcyjne</Link>
+            )}
           </View>
           {/* Profile management section */}
           <View>

@@ -1,8 +1,8 @@
-import { View, Text, FlatList, Pressable } from "react-native";
-import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { VisitModalForm } from "./VisitModalForm";
 import dayjs from "dayjs";
+import React, { useState } from "react";
+import { FlatList, Pressable, Text, View } from "react-native";
+import { VisitModalForm } from "./VisitModalForm";
 
 type VisitTileProps = {
   visit: VeterinaryVisit;

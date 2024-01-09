@@ -28,7 +28,7 @@ export const HomeScreen = () => {
         }}
       />
       <Stack.Screen
-        name={"HealthCard"}
+        name={ScreenNames.HEALTH_CARD}
         component={HealthCard}
         options={{
           title: "Karta zdrowia",
