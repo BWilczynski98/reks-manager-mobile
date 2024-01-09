@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 import Entypo from "@expo/vector-icons/Entypo";
 import React, { useEffect, useRef } from "react";
-import { Pressable, Text, TextInput, TouchableOpacity, View, type TextInputProps, Keyboard } from "react-native";
+import { Keyboard, Pressable, Text, TextInput, TouchableOpacity, View, type TextInputProps } from "react-native";
 
 type InputProps = {
   error?: boolean;
@@ -53,7 +53,7 @@ export const Input = (props: ExtendedTextInputProps) => {
       <Text className={cn("text-gray-50 font-semibold text-base", { "text-red-500": error })}>{label}</Text>
       <View
         className={cn(
-          "w-full border-2 border-gray-800 rounded-lg px-4 py-2 focus:border-violet-600 flex-row justify-between",
+          "w-full border-2 border-gray-700 rounded-lg px-4 py-2 focus:border-violet-600 flex-row justify-between",
           {
             "border-red-500": error,
           }

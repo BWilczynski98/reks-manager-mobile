@@ -1,0 +1,1 @@
+export { ListOfAdopters } from "./ListOfAdopters";

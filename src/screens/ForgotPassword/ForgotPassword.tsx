@@ -1,7 +1,8 @@
 import { Button, Container, Input } from "@/components";
 import { Heading } from "@/components/UI/Heading";
 import { errorsDictionary } from "@/helpers/errors-dictionary";
-import { StackProps } from "@/navigation/appNavigation";
+import { AuthorizationStackProps } from "@/navigation/types/NavigationTypes";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -23,7 +24,7 @@ type NotificationOfSuccessType = {
 
 const NotificationOfSuccess = ({ backToLoginScreen, email }: NotificationOfSuccessType) => {
   return (
-    <View className="flex-1 justify-center">
+    <View className="flex-1 justify-center px-4">
       <View className="space-y-4">
         <View>
           <Heading fontSize="3xl">Sprawdź szkynkę email</Heading>
@@ -40,18 +41,12 @@ const NotificationOfSuccess = ({ backToLoginScreen, email }: NotificationOfSucce
         <View>
           <Button onPress={backToLoginScreen}>Powrót do logowania</Button>
         </View>
-        {/* <View className="items-center">
-          <Text className="text-gray-50">Lub</Text>
-        </View>
-        <View>
-          <Button variant="outline">Wyślij ponownie</Button>
-        </View> */}
       </View>
     </View>
   );
 };
 
-export const ForgotPassword = ({ navigation }: StackProps) => {
+export const ForgotPassword = ({ navigation }: AuthorizationStackProps) => {
   const {
     control,
     handleSubmit,
@@ -63,8 +58,7 @@ export const ForgotPassword = ({ navigation }: StackProps) => {
     },
   });
   const [userEmailPrompt, setUserEmailPrompt] = useState<string | null>(null);
-  const [sendPasswordResetTokenToUserEmail, { isError, isLoading, isSuccess, data, status }] =
-    useSendPasswordResetTokenToUserEmailMutation();
+  const [sendPasswordResetTokenToUserEmail, { isLoading, isSuccess }] = useSendPasswordResetTokenToUserEmailMutation();
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     await sendPasswordResetTokenToUserEmail(data).unwrap();
@@ -77,14 +71,14 @@ export const ForgotPassword = ({ navigation }: StackProps) => {
 
   return (
     <Container>
-      <View className="mt-4">
+      <View className="mt-4 px-4">
         <Pressable onPress={backToLoginScreen}>
           <Text className="text-gray-50 font-semibold">
             <ChevronLeftIcon color="white" size={24} />
           </Text>
         </Pressable>
       </View>
-      {true ? (
+      {isSuccess ? (
         <NotificationOfSuccess backToLoginScreen={backToLoginScreen} email={userEmailPrompt} />
       ) : (
         <>
@@ -93,7 +87,7 @@ export const ForgotPassword = ({ navigation }: StackProps) => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 40}
           >
-            <View className="flex-1 justify-center">
+            <View className="flex-1 justify-center px-4">
               <View className="py-4">
                 <View className="items-center">
                   <Heading fontSize="3xl">Przypominanie hasła</Heading>
@@ -130,7 +124,7 @@ export const ForgotPassword = ({ navigation }: StackProps) => {
                 </View>
               </View>
               <View className="mt-10 space-y-4">
-                <Button onPress={handleSubmit(onSubmit)} isLoading={false}>
+                <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
                   Zresetuj hasło
                 </Button>
                 <Pressable onPress={() => navigation.goBack()}>

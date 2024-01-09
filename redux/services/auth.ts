@@ -9,6 +9,12 @@ type SendPasswordResetTokenType = {
   email: string;
 };
 
+type NewPassword = {
+  old_password: string;
+  new_password1: string;
+  new_password2: string;
+};
+
 export interface Root {
   data: Data;
 }
@@ -46,13 +52,14 @@ const injectedRtkApi = api.injectEndpoints({
         body: email,
       }),
     }),
-    getUserData: build.query<UserResponse, void>({
-      query: () => ({
-        url: "/auth/user/",
-        method: "GET",
+    passwordChange: build.mutation({
+      query: (password: NewPassword) => ({
+        url: "/auth/password/change/",
+        method: "POST",
+        body: password,
       }),
     }),
-    getAnotherData: build.query<UserResponse, void>({
+    getUserData: build.query<UserResponse, void>({
       query: () => ({
         url: "/auth/user/",
         method: "GET",
@@ -64,8 +71,8 @@ const injectedRtkApi = api.injectEndpoints({
 export const {
   useSignInMutation,
   useLogoutMutation,
-  useGetUserDataQuery,
-  useGetAnotherDataQuery,
   useSendPasswordResetTokenToUserEmailMutation,
+  usePasswordChangeMutation,
+  useGetUserDataQuery,
 } = injectedRtkApi;
 export { injectedRtkApi as authApi };

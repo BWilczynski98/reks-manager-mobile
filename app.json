@@ -3,7 +3,6 @@
     "experiments": {
       "tsconfigPaths": true
     },
-
     "name": "reks-manager-mobile",
     "slug": "reks-manager-mobile",
     "version": "1.0.0",
@@ -13,24 +12,33 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "config": {
-        "usesNonExemptEncryption": false
-      },
       "supportsTablet": true
     },
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#000000"
+      },
+      "package": "com.wilczek1200.reksmanagermobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7d2b3794-cc28-4967-b425-e43d2ebb7e7d"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7d2b3794-cc28-4967-b425-e43d2ebb7e7d"
     }
   }
 }

@@ -1,6 +1,4 @@
 declare module "@env" {
-  export const API_TOKEN: string;
-  export const BASE_URL: string;
-
+  export const EXPO_PUBLIC_API_URL: string;
   // other ones
 }

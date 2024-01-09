@@ -1,0 +1,17 @@
+export enum ScreenNames {
+  SIGN_IN = "SignIn",
+  FORGOT_PASSWORD = "ForgotPassword",
+  DASHBOARD = "Dashboard",
+  ADD_ANIMAL_FORM = "CreateAnimalProfile",
+  ACCOUNT = "Account",
+  ANIMAL_PROFILE = "AnimalProfile",
+  ADOPTION_ANNOUNCEMENT_FORM = "AdoptionAnnouncementForm",
+  ADOPTION_CONTRACT_FORM = "AdoptionContractForm",
+  EDIT_ANIMAL_PROFILE = "EditAnimalProfile",
+  HEALTH_CARD = "HealthCard",
+  ALLERGIES = "Allergies",
+  MEDICATION = "Medication",
+  VACCINATIONS = "Vaccinations",
+  VISITS = "Visits",
+  CREATE_ADOPTER_PROFILE = "CreateAdopterProfile",
+}
