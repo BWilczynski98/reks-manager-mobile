@@ -25,7 +25,7 @@ export const AdoptionAnnouncementForm = ({
     vaccinated: animal.vaccinated,
     dewormed: animal.dewormed,
     character: animal.character,
-    for_who: animal.character,
+    for_who: animal.for_who,
     description_of_health: animal.description_of_health,
     description: animal.description,
   };
