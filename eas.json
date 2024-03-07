@@ -12,7 +12,7 @@
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://reks-manager-xkpx3.ondigitalocean.app/"
+        "EXPO_PUBLIC_API_URL": "https://reks-manager-6tlcn.ondigitalocean.app/"
       }
     },
     "androidapk": {
@@ -20,7 +20,7 @@
       "android": {
         "buildType": "apk",
         "env": {
-          "EXPO_PUBLIC_API_URL": "https://reks-manager-xkpx3.ondigitalocean.app/"
+          "EXPO_PUBLIC_API_URL": "https://reks-manager-6tlcn.ondigitalocean.app/"
         }
       }
     }
